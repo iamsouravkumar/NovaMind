@@ -1,20 +1,31 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { auth } from '../config/firebase'
+import { auth } from '../../config/firebase'
 import { FcGoogle } from "react-icons/fc"
 import { motion } from "framer-motion"
+import { toast } from 'react-hot-toast';
 
-export default function GoogleLogin({ setUser }) {
+export default function GoogleLogin({ setUser, user }) {
   const handleLogin = async () => {
     const provider = new GoogleAuthProvider()
     try {
       const result = await signInWithPopup(auth, provider)
       setUser(result.user) // Store user info on successful login
-      window.location.href = '/chat'
+      toast.success(`Welcome, ${result?.user?.displayName}!`, {
+        position: 'top-center',
+        duration: 3000,
+      })
+      // window.location.href = '/chat'
     } catch (error) {
       console.error('Google login error:', error)
     }
   }
+
+  useEffect(() => {
+    if (user) {
+      window.location.href = '/chat'
+    }
+  }, [user])
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-[#212121] to-gray-800">

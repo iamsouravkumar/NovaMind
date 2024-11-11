@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { db, auth } from '../config/firebase'
+import { db, auth } from '../../config/firebase'
 import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
 import { format } from 'date-fns'
 import { motion, AnimatePresence } from 'framer-motion'

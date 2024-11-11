@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
+import { auth } from '../../config/firebase';
 import { LogOut, Settings } from "lucide-react";
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
+import {toast} from 'react-hot-toast'
 
 const AvatarModal = ({ user, setUser, onClick }) => {
 
@@ -9,6 +11,11 @@ const AvatarModal = ({ user, setUser, onClick }) => {
         try {
             await signOut(auth);
             setUser(null);
+            toast.success('Logout Successful!', {
+                position: 'top-center',
+                duration: 3000,
+            })
+            window.location.href = '/'
         } catch (error) {
             console.error("Error logging out:", error);
         }
@@ -19,6 +26,7 @@ const AvatarModal = ({ user, setUser, onClick }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
+            onClick={onClick}
             className='fixed top-12 right-12 shadow-sm shadow-purple-500 rounded-xl flex flex-col gap-3 px-4 py-4 w-[15%] text-gray-100'>
 
             <div className="p-2">Hey, {user?.displayName}</div>
