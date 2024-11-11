@@ -11,11 +11,11 @@ export default function GoogleLogin({ setUser, user }) {
     try {
       const result = await signInWithPopup(auth, provider)
       setUser(result.user) // Store user info on successful login
+      window.location.href = '/chats'
       toast.success(`Welcome, ${result?.user?.displayName}!`, {
         position: 'top-center',
         duration: 3000,
       })
-      // window.location.href = '/chat'
     } catch (error) {
       console.error('Google login error:', error)
     }

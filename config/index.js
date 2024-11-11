@@ -5,19 +5,18 @@ const admin = require("firebase-admin");
 require("dotenv").config();
 
 const API_KEY = process.env.VITE_GEMINI_API_KEY;
-FIREBASE_KEY = process.env.FIREBASE_SERVICE_KEY
 
 // Initialize Firebase Admin SDK
 admin.initializeApp({
   credential: admin.credential.cert('./service.json'),
-});
+})
 
 const app = express();
 app.use(express.json());
 
-app.use(cors({ origin: 'https://localhost:5173', credentials: true }));
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 
-const genAI = new GoogleGenerativeAI(API_KEY); // Use your Gemini API key
+const genAI = new GoogleGenerativeAI('AIzaSyDjSmHW_s34T_wlyeJEgrauhk8t5vNCG6Y'); // Use your Gemini API key
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 // Endpoint to generate AI responses and store chat history
