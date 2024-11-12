@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { signOut } from "firebase/auth";
-import { auth } from '../../config/firebase';
+import { auth } from '../config/firebase';
 import { LogOut, Settings } from "lucide-react";
 import { motion } from 'framer-motion'
 import {toast} from 'react-hot-toast'

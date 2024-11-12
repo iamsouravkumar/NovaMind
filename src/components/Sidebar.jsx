@@ -1,15 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { db, auth } from '../../config/firebase'
-import { collection, query, where, onSnapshot, orderBy } from 'firebase/firestore'
-import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
 import { motion, AnimatePresence } from 'framer-motion'
 import { BsLayoutSidebarInset, BsThreeDots } from "react-icons/bs"
 import { useMediaQuery } from 'react-responsive'
 import { useNavigate, useLocation } from 'react-router-dom';
+import { chatService } from '../services/chatService';
+import { toast } from 'react-hot-toast';
+import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
+const starLogo = '../public/star.png'
 
-const Sidebar = ({ setSelectedChat }) => {
+const Sidebar = () => {
   const [chats, setChats] = useState([])
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [isOpen, setIsOpen] = useState(true)
   const [modalOpen, setModalOpen] = useState(false)
   const [selectedChatId, setSelectedChatId] = useState(null)
@@ -24,81 +25,187 @@ const Sidebar = ({ setSelectedChat }) => {
     setIsOpen(!isMobile)
   }, [isMobile])
 
+  // Subscribe to chats
   useEffect(() => {
-    const user = auth.currentUser
-    if (user) {
-      const chatsRef = collection(db, 'chats')
-      const q = query(
-        chatsRef,
-        where('userId', '==', user.uid),
-        orderBy('timestamp', 'desc')
-      )
+    const unsubscribe = chatService.subscribeToChats((newChats) => {
+      const sortedChats = newChats.sort((a, b) => 
+        (b.updatedAt?.seconds || 0) - (a.updatedAt?.seconds || 0)
+      );
+      setChats(sortedChats);
+      setLoading(false);
+    });
 
-      const unsubscribe = onSnapshot(q, (snapshot) => {
-        const chatsData = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }))
-        setChats(chatsData)
-        setLoading(false)
-      })
-
-      return () => unsubscribe()
-    }
-  }, [])
-
-  useEffect(() => {
-    // Retrieve chat ID from URL on page load
-    const chatIdFromUrl = new URLSearchParams(location.search).get('chatId');
-    if (chatIdFromUrl) {
-      setSelectedChatId(chatIdFromUrl);
-      setSelectedChat(chatIdFromUrl); // Assuming setSelectedChat takes chat ID
-    }
-  }, [location.search]);
+    return () => unsubscribe();
+  }, []);
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
   }
 
-  const handleChatSelect = (chatId) => {
-    setSelectedChatId(chatId);
-    setSelectedChat(chatId);
-    navigate(`?chatId=${chatId}`);
-    if (isMobile) {
-      setIsOpen(false)
+ const handleChatSelect = (chat) => {
+    if (selectedChatId === chat.id) {
+      // If the chat is already selected, close it
+      navigate('/');
+      setSelectedChatId(null);
+    } else {
+      // Otherwise, open the new chat
+      setSelectedChatId(chat.id);
+      navigate(`/chat/${chat.id}`);
+      if (isMobile) {
+        setIsOpen(false);
+      }
     }
-  }
+  };
 
-  const ChatSkeleton = () => (
-    <div className="animate-pulse flex items-center space-x-4 p-4 hover:bg-gray-800 rounded-lg">
-      <div className="rounded-full bg-gray-700 h-10 w-10"></div>
-      <div className="flex-1 space-y-2">
-        <div className="h-4 bg-gray-700 rounded w-3/4"></div>
-        <div className="h-4 bg-gray-700 rounded w-1/2"></div>
-      </div>
-    </div>
-  )
+  const handleDeleteChat = async (chatId) => {
+    try {
+      await chatService.deleteChat(chatId);
+      setModalOpen(false);
+      if (location.pathname.includes(chatId)) {
+        navigate('/');
+      }
+      toast.success('Chat deleted');
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Failed to delete chat');
+    }
+  };
 
-  // Format the timestamp for display
+  const handleUpdateTitle = async (chatId, newTitle) => {
+    try {
+      await chatService.updateTitle(chatId, newTitle);
+      setModalOpen(false);
+      toast.success('Title updated');
+    } catch (error) {
+      console.error('Error:', error);
+      toast.error('Failed to update title');
+    }
+  };
+
   const formatTimestamp = (timestamp) => {
-    if (isToday(timestamp)) return 'Today'
-    if (isYesterday(timestamp)) return 'Yesterday'
-    if (isThisWeek(timestamp)) return format(timestamp, "eeee")
-    if (isThisMonth(timestamp)) return format(timestamp, "d MMM")
-    return format(timestamp, "MMMM d, yyyy")
-  }
+    if (!timestamp || !timestamp.seconds) return '';
+    const date = new Date(timestamp.seconds * 1000);
+    if (isToday(date)) return 'Today';
+    if (isYesterday(date)) return 'Yesterday';
+    if (isThisWeek(date)) return format(date, "eeee");
+    if (isThisMonth(date)) return format(date, "d MMM");
+    return format(date, "MMMM d, yyyy");
+  };
 
-  const handleModalToggle = (chatId, chatIndex) => {
-    setSelectedChatId(chatId)
-    setModalOpen(!modalOpen)
+  
+  const groupChatsByDate = (chats) => {
+    const groups = {
+      today: [],
+      yesterday: [],
+      thisWeek: [],
+      thisMonth: [],
+      older: []
+    };
 
-    // Get the position of the chat in the sidebar using getBoundingClientRect
-    const chatElement = chatRefs.current[chatIndex]
+    chats.forEach(chat => {
+      if (!chat.updatedAt || !chat.updatedAt.seconds) {
+        return; // Skip chats without valid timestamps
+      }
+      const date = new Date(chat.updatedAt.seconds * 1000);
+      if (isToday(date)) {
+        groups.today.push(chat);
+      } else if (isYesterday(date)) {
+        groups.yesterday.push(chat);
+      } else if (isThisWeek(date)) {
+        groups.thisWeek.push(chat);
+      } else if (isThisMonth(date)) {
+        groups.thisMonth.push(chat);
+      } else {
+        groups.older.push(chat);
+      }
+    });
+
+    return groups;
+  };
+    
+    const handleModalToggle = (chatId, chatIndex) => {
+    setSelectedChatId(chatId);
+    setModalOpen(!modalOpen);
+
+    const chatElement = chatRefs.current[chatIndex];
     if (chatElement) {
-      const { top, left, width } = chatElement.getBoundingClientRect()
-      setModalPosition({ top: top + window.scrollY, left: left + width }) // Position modal to the right of the chat
+      const { top, left, width } = chatElement.getBoundingClientRect();
+      setModalPosition({ top: top + window.scrollY, left: left + width });
     }
-  }
+  };
+  const ChatSkeleton = () => (
+    <div className="animate-pulse flex items-center space-x-4 p-4 hover:bg-gray-800 rounded-lg mx-2">
+      <div className="flex-1 space-y-3">
+        <div className="h-4 bg-gray-700 rounded w-3/4"></div>
+        <div className="h-3 bg-gray-700/50 rounded w-1/2"></div>
+      </div>
+      <div className="h-4 w-4 bg-gray-700 rounded"></div>
+    </div>
+  );
+  const renderChatGroup = (chats, groupTitle) => {
+    if (!chats || chats.length === 0) return null;
+  
+
+    return (
+      <div className="mb-6">
+        <div className="sticky top-0 z-10 backdrop-blur-sm">
+          <h3 className="
+            text-xs
+            font-semibold
+            uppercase
+            tracking-wider
+            px-4
+            py-2
+            mb-2
+            text-gray-400
+            border-b
+            border-gray-800/50
+            bg-gradient-to-r
+            from-gray-900/50
+            to-transparent
+          ">
+            {groupTitle}
+            <span className="ml-2 text-gray-500 text-[10px]">({chats.length})</span>
+          </h3>
+        </div>
+        <div className="space-y-1">
+          {chats.map((chat, index) => (
+            <motion.li 
+              key={chat?.id}
+              ref={(el) => chatRefs.current[index] = el}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={() => handleChatSelect(chat)}
+              className={`cursor-pointer p-3 mx-2 rounded-lg transition-all duration-200 ease-in-out border-[1px] border-slate-500/30
+                ${chat.id === selectedChatId ? 'bg-gray-800 shadow-lg  shadow-gray-900/20' : 'hover:bg-gray-800/70'}
+              `}
+            >
+              <div className="flex items-center space-x-3">
+                {/* {chat.id !== selectedChatId && ( // Show logo only for AI messages
+                  <img src={starLogo} alt="LowCode GPT" height={20} width={20} className="mr-2" />
+                )} */}
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-medium truncate text-gray-200 ">
+                    {chat.title || 'Untitled Chat'}
+                  </h3>
+                  {/* <p className="text-xs text-gray-500 mt-0.5">
+                    {formatTimestamp(chat.updatedAt)}
+                  </p> */}
+                </div>
+                <button 
+                  onClick={(e) => { e.stopPropagation(); handleModalToggle(chat.id, index) }}
+                  className="text-gray-400 hover:text-white transition-colors duration-200"
+                >
+                  <BsThreeDots className="w-4 h-4" />
+                </button>
+              </div>
+            </motion.li>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="relative h-[100%] w-[20%] max-md:w-[95%]">
@@ -113,8 +220,8 @@ const Sidebar = ({ setSelectedChat }) => {
           >
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <img src="star.png" alt="LowCode GPT Logo" height={30} width={30} />
-                <h1 className="text-xl font-bold">LowCode GPT</h1>
+                <img src={starLogo} alt="LowCode GPT Logo" height={25} width={25} />
+                <h1 className="text-lg font-bold">LowCode GPT</h1>
               </div>
               <button 
                 onClick={toggleSidebar}
@@ -123,45 +230,33 @@ const Sidebar = ({ setSelectedChat }) => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
               {loading ? (
-                <div>
-                  <ChatSkeleton />
-                  <ChatSkeleton />
-                  <ChatSkeleton />
+                <div className="space-y-4 p-4">
+                  <ChatSkeleton/>
+                  <ChatSkeleton/>
+                  <ChatSkeleton/>
                 </div>
               ) : chats.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full">
-                  <p className="text-center text-gray-500">No conversations yet, start a new chat!</p>
+                <div className="flex flex-col items-center justify-center h-full p-4">
+                  <p className="text-center text-gray-500 animate-pulse">
+                    No conversations yet, start a new chat!
+                  </p>
                 </div>
               ) : (
-                <ul className="space-y-2 p-4">
-                  {chats.map((chat, index) => (
-                    <motion.li 
-                      key={chat?.id}
-                      ref={(el) => chatRefs.current[index] = el} // Assign ref to each chat item
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.3 }}
-                      onClick={() => handleChatSelect(chat)}
-                      className="cursor-pointer hover:bg-gray-800 p-3 rounded-lg transition-colors duration-300"
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className="flex-1">
-                          <h3 className="font-medium truncate">{chat.title || 'Untitled Chat'}</h3>
-                          <p className="text-sm text-gray-400">
-                            {chat.timestamp ? formatTimestamp(chat.timestamp.toDate()) : 'No date'}
-                          </p>
-                        </div>
-                        <button 
-                          onClick={(e) => { e.stopPropagation(); handleModalToggle(chat.id, index) }}
-                          className="text-gray-400 hover:text-white"
-                        >
-                          <BsThreeDots className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </motion.li>
-                  ))}
+                <ul className="py-4 space-y-2">
+                  {(() => {
+                    const groups = groupChatsByDate(chats);
+                    return (
+                      <>
+                        {renderChatGroup(groups.today, 'Today')}
+                        {renderChatGroup(groups.yesterday, 'Yesterday')}
+                        {renderChatGroup(groups.thisWeek, 'Previous 7 Days')}
+                        {renderChatGroup(groups.thisMonth, 'This Month')}
+                        {renderChatGroup(groups.older, 'Older')}
+                      </>
+                    );
+                  })()}
                 </ul>
               )}
             </div>
@@ -169,7 +264,6 @@ const Sidebar = ({ setSelectedChat }) => {
         )}
       </AnimatePresence>
 
-      {/* Modal for Chat Settings */}
       <AnimatePresence>
         {modalOpen && selectedChatId && (
           <motion.div 
@@ -177,13 +271,12 @@ const Sidebar = ({ setSelectedChat }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="absolute bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-50 w-full w-[50%]"
+            className="absolute bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-50 w-[50%]"
             style={{ top: modalPosition.top, left: modalPosition.left }}
           >
-            {/* <h3 className="font-bold text-lg">Chat Settings</h3> */}
             <div className="space-y-2">
               <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg">Change Title</button>
-              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg">Delete Chat</button>
+              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => handleDeleteChat(selectedChatId)}>Delete Chat</button>
               <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => setModalOpen(false)}>Close</button>
             </div>
           </motion.div>

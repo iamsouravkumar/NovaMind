@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import { GoogleAuthProvider, signInWithPopup } from 'firebase/auth'
-import { auth } from '../../config/firebase'
+import { auth } from '../config/firebase'
 import { FcGoogle } from "react-icons/fc"
 import { motion } from "framer-motion"
 import { toast } from 'react-hot-toast';
@@ -36,7 +36,7 @@ export default function GoogleLogin({ setUser, user }) {
         transition={{ duration: 0.5 }}
       >
         <motion.img 
-          src="/star.png" 
+          src="../public/star.png" 
           alt="LowCode GPT Logo" 
           height={50} 
           width={50} 
@@ -44,9 +44,9 @@ export default function GoogleLogin({ setUser, user }) {
           whileHover={{ scale: 1.1, rotate: 90 }}
           transition={{ duration: 0.3 }}
         />
-        <h1 className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 max-md:text-3xl'>
+        {/* <h1 className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 max-md:text-3xl'>
           LowCode GPT
-        </h1>
+        </h1> */}
       </motion.header>
 
       <motion.div 
@@ -55,9 +55,9 @@ export default function GoogleLogin({ setUser, user }) {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-       <h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-green-300 to-blue-500 max-md:text-2xl'>
-          Welcome to LowCode GPT
-        </h2>
+       <h1 className='text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 max-md:text-3xl'>
+          LowCode GPT
+        </h1>
         <p className='text-xl text-gray-300 mb-4 text-center max-w-md'>
           Experience the power of AI-assisted development. 
           Login now to start building amazing projects faster than ever before.
