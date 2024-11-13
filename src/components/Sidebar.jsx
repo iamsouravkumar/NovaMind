@@ -208,7 +208,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="relative h-[100%] w-[20%] max-md:w-[95%]">
+    <div className=" h-[100%] w-[20%] max-md:w-[100%] ">
       <AnimatePresence>
         {isOpen && (
           <motion.div 
@@ -216,12 +216,12 @@ const Sidebar = () => {
             animate={{ width: '100%' }}
             exit={{ width: 0 }}
             transition={{ duration: 0.3 }}
-            className="text-white h-screen w-full md:w-80 bg-[#171717] flex flex-col overflow-hidden md:relative z-50"
+            className="text-white h-screen w-full md:w-80 bg-[#171717] flex flex-col overflow-hidden md:overflow-y-auto"
           >
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img src={starLogo} alt="LowCode GPT Logo" height={25} width={25} />
-                <h1 className="text-lg font-bold">LowCode GPT</h1>
+                <h1 className="text-lg font-bold max-md:">LowCode GPT</h1>
               </div>
               <button 
                 onClick={toggleSidebar}
@@ -230,7 +230,7 @@ const Sidebar = () => {
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
+            <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent z-[100]">
               {loading ? (
                 <div className="space-y-4 p-4">
                   <ChatSkeleton/>
@@ -238,7 +238,7 @@ const Sidebar = () => {
                   <ChatSkeleton/>
                 </div>
               ) : chats.length === 0 ? (
-                <div className="flex flex-col items-center justify-center h-full p-4">
+                <div className="flex flex-col items-center justify-center h-full p-4 z-[100]">
                   <p className="text-center text-gray-500 animate-pulse">
                     No conversations yet, start a new chat!
                   </p>
@@ -271,7 +271,7 @@ const Sidebar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="absolute bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-50 w-[50%]"
+            className="absolute bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-[100] w-[50%]"
             style={{ top: modalPosition.top, left: modalPosition.left }}
           >
             <div className="space-y-2">
@@ -290,7 +290,7 @@ const Sidebar = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           onClick={toggleSidebar}
-          className="absolute top-4 left-4 p-2 bg-[#171717] text-white rounded-full hover:bg-gray-700 transition-colors duration-200 z-50"
+          className="absolute top-4 left-4 p-2 bg-[#171717] text-white rounded-full hover:bg-gray-700 transition-colors duration-200 z-[100]"
         >
           <BsLayoutSidebarInset className="w-6 h-6" />
         </motion.button>

@@ -5,7 +5,7 @@ const ChatLoader = () => {
   return (
    
       <>   
-          <div class="loader">
+          <div className="loader">
               <div>
                   <ul>
                       <li>
