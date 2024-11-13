@@ -46,6 +46,9 @@ const Sidebar = () => {
     if (selectedChatId === chat.id) {
       // If the chat is already selected, close it
       navigate('/');
+      if (isMobile) {
+        setIsOpen(false);
+      }
       setSelectedChatId(null);
     } else {
       // Otherwise, open the new chat
