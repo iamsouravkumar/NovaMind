@@ -10,6 +10,7 @@ import ModelSelectionModal from './ModelSelectionModal';
 import '../App.css'
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import CreateMsgLoader from './CreateMsgLoader';
+import PredefinedPrompts from './PredefinedPrompts';
 const starLogo = '../public/star.png'
 
 const Chat = () => {
@@ -239,7 +240,7 @@ const Chat = () => {
               </motion.div>
 
               <div className="flex flex-wrap justify-center gap-4 mt-6">
-                {predefinedPrompts.map((item, index) => (
+                {/* {predefinedPrompts.map((item, index) => (
                   <motion.button
                     key={index}
                     whileHover={{ scale: 1.05 }}
@@ -250,7 +251,8 @@ const Chat = () => {
                     <item.icon className="w-8 h-8 mb-2 text-blue-400" />
                     <span className="text-sm text-gray-300">{item.text}</span>
                   </motion.button>
-                ))}
+                ))} */}
+                <PredefinedPrompts onPromptSelect={handlePredefinedPrompt} />
               </div>
 
             </motion.div>
