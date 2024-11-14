@@ -70,6 +70,9 @@ const Sidebar = () => {
       setModalOpen(false);
       if (location.pathname.includes(chatId)) {
         navigate('/');
+        if(isMobile){
+          setIsOpen(false);
+        }
       }
       toast.success('Chat deleted');
     } catch (error) {

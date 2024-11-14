@@ -12,10 +12,12 @@ export default function AuthPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [mainLoading, setMainLoading] = useState(false);
 
     const handleGoogleLogin = async () => {
         const provider = new GoogleAuthProvider();
         try {
+            setMainLoading(true);
             const result = await signInWithPopup(auth, provider);
             setUser(result.user);
             window.location.href = '/chats';
@@ -23,6 +25,8 @@ export default function AuthPage() {
         } catch (error) {
             console.error('Google login error:', error);
             toast.error('Failed to login with Google');
+        } finally {
+            setMainLoading(false);
         }
     };
 
@@ -38,9 +42,11 @@ export default function AuthPage() {
                     throw new Error('Email already exists');
                 }
                 result = await createUserWithEmailAndPassword(auth, email, password);
+                setMainLoading(true);
                 toast.success('Account created successfully!');
             } else {
                 result = await signInWithEmailAndPassword(auth, email, password);
+                setMainLoading(true);
                 toast.success('Welcome back!');
             }
             setUser(result.user);
@@ -50,6 +56,7 @@ export default function AuthPage() {
             toast.error(error.message === 'Email already exists' ? 'Email already exists' : 'Not a valid email or password');
         } finally {
             setLoading(false);
+            setMainLoading(false);
         }
     };
 
@@ -61,6 +68,11 @@ export default function AuthPage() {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-[#212121] to-gray-800">
+            {mainLoading && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="text-white text-2xl">Loading...</div>
+                </div>
+            )}
             {/* Header */}
             {/* <motion.header 
         className='fixed top-4 flex justify-center items-center gap-2'

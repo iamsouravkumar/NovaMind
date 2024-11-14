@@ -7,20 +7,23 @@ import { toast } from 'react-hot-toast';
 import UserAvatar from './UserAvatar';
 import ChatLoader from './ChatLoader';
 import ModelSelectionModal from './ModelSelectionModal';
-const starLogo = '../public/star.png'
 import '../App.css'
 import { HiMiniPencilSquare } from "react-icons/hi2";
+import CreateMsgLoader from './CreateMsgLoader';
+const starLogo = '../public/star.png'
 
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [msgLoading, setMsgLoading] = useState(false);
+  const [selectedModel, setSelectedModel] = useState('gemini-1.5-pro');
   const [chatLoading, setChatLoading] = useState(false);
+  const [createChatLoading, setCreateChatLoading] = useState(false);
+
   const { chatId } = useParams();
   const navigate = useNavigate();
   const messagesEndRef = useRef(null);
-  const [selectedModel, setSelectedModel] = useState('gemini-1.5-pro');
 
   // Subscribe to messages for the current chat
   useEffect(() => {
@@ -117,8 +120,10 @@ const Chat = () => {
 
   const handleNewChat = async () => {
     // Create a new chat and navigate to it
-    const newChatId = await chatService.createChat('', selectedModel); // Create a new chat with an empty message
+    setCreateChatLoading(true);
+    const newChatId = await chatService.createChat('Hii', selectedModel); // Create a new chat with an empty message
     navigate(`/chat/${newChatId}`); // Redirect to the new chat
+    setCreateChatLoading(false);
   };
 
   const formatMessageContent = (content) => {
@@ -160,13 +165,20 @@ const Chat = () => {
 
   return (
     <div className="fixed top-0 flex flex-col h-[100%] w-[80%] ml-[20%] dark:bg-gray-900 max-md:w-[100%] max-md:ml-0">
+      {createChatLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader /> 
+          {/* <p className='text-gray-300 animate-bounce text-sm'>Creating new chat...</p> */}
+          </div>
+        </div>
+      )}
       {/* <div className='flex justify-end max-md:hidden h-4'><UserAvatar /></div> */}
       <div className={`flex ${isChatPage ? 'justify-end' : 'justify-between flex-row-reverse max-md:ml-28'} items-center p-1`}>
 
         {isChatPage ? (
 
           <button className="text-gray-400 hover:text-white transition-colors duration-200 p-1">
-            <HiMiniPencilSquare className="w-8 h-8 lg:hidden" onClick={handleNewChat}/>
+            <HiMiniPencilSquare className="w-8 h-8 lg:hidden" onClick={handleNewChat} />
           </button>
         ) : (
           // Render user avatar here if not on chat page
@@ -174,10 +186,20 @@ const Chat = () => {
         )}
 
         {isChatPage && (
-          <div className='max-md:hidden'>
-          <UserAvatar />
+          <div className="max-md:hidden fixed top-4 left-[22%]">
+            <ModelSelectionModal
+              selectedModel={selectedModel}
+              onSelectModel={setSelectedModel}
+            />
           </div>
         )}
+
+        {isChatPage && (
+          <div className='max-md:hidden'>
+            <UserAvatar />
+          </div>
+        )}
+
 
         {!isChatPage && (
           <ModelSelectionModal
@@ -187,7 +209,7 @@ const Chat = () => {
         )}
 
       </div>
-     
+
       <div className="flex-1 overflow-y-auto p-4 max-md:p-2">
         <AnimatePresence>
           {chatLoading ? (
