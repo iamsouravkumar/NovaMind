@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { BsLayoutSidebarInset, BsThreeDots, BsPencil } from "react-icons/bs"
+import { BsLayoutSidebarInset, BsThreeDots, BsPencil, BsTrash, BsXLg } from "react-icons/bs"
 import { useMediaQuery } from 'react-responsive'
 import { useNavigate, useLocation } from 'react-router-dom';
 import { chatService } from '../services/chatService';
@@ -11,13 +11,14 @@ const starLogo = '../public/star.png'
 const Sidebar = () => {
   const [chats, setChats] = useState([])
   const [loading, setLoading] = useState(true)
-  const [isOpen, setIsOpen] = useState(true)
-  const [modalOpen, setModalOpen] = useState(false)
   const [selectedChatId, setSelectedChatId] = useState(null)
+  const [isOpen, setIsOpen] = useState(true) //for mobile nd chat select
+  const [modalOpen, setModalOpen] = useState(false)
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 })
   const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
   const [editingChatId, setEditingChatId] = useState(null);
   const [newTitle, setNewTitle] = useState('');
+  
   const isMobile = useMediaQuery({ maxWidth: 768 })
 
   const chatRefs = useRef([]) // Array to store references to chat list items
@@ -82,6 +83,9 @@ const Sidebar = () => {
       await chatService.updateTitle(chatId, newTitle);
       setModalOpen(false);
       toast.success('Title updated');
+      if(isMobile){
+        setIsOpen(false);
+      }
     } catch (error) {
       console.error('Error:', error);
       toast.error('Failed to update title');
@@ -204,7 +208,7 @@ const Sidebar = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.3 }}
               onClick={() => handleChatSelect(chat)}
-              className={`cursor-pointer p-3 mx-2 rounded-lg transition-all duration-200 ease-in-out border-[1px] border-slate-500/30
+              className={`cursor-pointer p-3 mx-2 rounded-lg transition-all duration-200 ease-in-out border-[1px] border-slate-500/30 text-ellipsis line-clamp-1
                 ${chat.id === selectedChatId ? 'bg-gray-800 shadow-lg shadow-gray-900/20' : 'hover:bg-gray-800/70'}
               `}
             >
@@ -245,7 +249,7 @@ const Sidebar = () => {
   );
 
   return (
-    <div className="h-full w-full md:w-[20%] relative">
+    <div className={`h-full w-full md:w-[20%] relative ${isOpen ? 'border-r-[1px] border-slate-500/30' : ''} `}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
@@ -262,7 +266,7 @@ const Sidebar = () => {
               </div>
               <button
                 onClick={toggleSidebar}
-                className="p-2 rounded-full hover:bg-gray-700 transition-colors duration-200 md:hidden"
+                className="p-2 rounded-full hover:bg-gray-700 transition-colors duration-200"
               >
                 <BsLayoutSidebarInset className="w-6 h-6" />
               </button>
@@ -309,7 +313,7 @@ const Sidebar = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-[60] w-48 md:w-64"
+            className="fixed bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-[60] w-48 md:w-64 max-md:mt-1"
             style={{
               top: modalPosition.top,
               left: modalPosition.left,
@@ -321,10 +325,10 @@ const Sidebar = () => {
                 className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg"
                 onClick={() => handleEditTitleClick(selectedChatId, chats.find(chat => chat.id === selectedChatId)?.title || '')}
               >
-                Change Title
+                <p className="flex items-center gap-2"><BsPencil size={15} className='text-blue-500'/> Change Title </p> 
               </button>
-              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => handleDeleteChat(selectedChatId)}>Delete Chat</button>
-              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => setModalOpen(false)}>Close</button>
+              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => handleDeleteChat(selectedChatId)}><p className='flex items-center gap-2'><BsTrash size={15} className='text-red-500'/> Delete Chat</p></button>
+              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => setModalOpen(false)}><p className='flex items-center gap-2'><BsXLg size={15} className='text-orange-500'/> Close</p></button>
             </div>
           </motion.div>
         )}
@@ -377,7 +381,7 @@ const Sidebar = () => {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           onClick={toggleSidebar}
-          className="fixed top-4 left-4 p-2 bg-[#171717] text-white rounded-full hover:bg-gray-700 transition-colors duration-200 z-50 md:hidden"
+          className="fixed top-[8px] left-4 p-2 bg-[#171717] text-white rounded-full hover:bg-gray-700 transition-colors duration-200 z-50"
         >
           <BsLayoutSidebarInset className="w-6 h-6" />
         </motion.button>

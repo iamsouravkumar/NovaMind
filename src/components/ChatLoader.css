@@ -10,6 +10,10 @@
     height: 140px;
     position: relative;
   }
+
+  @media screen and (max-width: 768px) {
+    
+  }
   
   .loader:before, .loader:after {
     --r: -6deg;

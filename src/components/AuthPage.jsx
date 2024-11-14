@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+import { GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';
 import { auth } from '../config/firebase';
 import { FcGoogle } from "react-icons/fc";
 import { motion, AnimatePresence } from "framer-motion";
@@ -33,6 +33,10 @@ export default function AuthPage() {
         try {
             let result;
             if (isSignUp) {
+                const signInMethods = await auth.fetchSignInMethodsForEmail(email);
+                if (signInMethods.length > 0) {
+                    throw new Error('Email already exists');
+                }
                 result = await createUserWithEmailAndPassword(auth, email, password);
                 toast.success('Account created successfully!');
             } else {
@@ -43,7 +47,7 @@ export default function AuthPage() {
             window.location.href = '/chats';
         } catch (error) {
             console.error('Email auth error:', error);
-            toast.error(error.message);
+            toast.error(error.message === 'Email already exists' ? 'Email already exists' : 'Not a valid email or password');
         } finally {
             setLoading(false);
         }
@@ -51,7 +55,7 @@ export default function AuthPage() {
 
     useEffect(() => {
         if (user) {
-            window.location.href = '/chat';
+            window.location.href = '/';
         }
     }, [user]);
 
@@ -80,7 +84,7 @@ export default function AuthPage() {
 
             {/* Main Content */}
             <motion.div
-                className="flex flex-col items-center gap-8 p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700"
+                className="flex flex-col items-center gap-8 p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700 max-md:w-[90%] max-md:p-4"
                 initial={{ scale: 0.9, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.5 }}
@@ -152,12 +156,12 @@ export default function AuthPage() {
 
             {/* Footer */}
             <motion.footer
-                className='fixed bottom-0 w-full p-3 bg-gradient-to-r from-gray-900 to-black'
+                className='fixed bottom-0 w-full p-3 bg-gradient-to-r from-gray-900 to-black max-md:p-1'
                 initial={{ y: 50, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
             >
-                <p className='text-center text-sm text-gray-300'>
+                <p className='text-center text-sm text-gray-300 max-md:text-xs'>
                     Made with <span className='text-red-500'>&#10084;</span> by Sourav.
                     This App is powered by <span className='text-blue-400'>Gemini API</span>.
                 </p>
