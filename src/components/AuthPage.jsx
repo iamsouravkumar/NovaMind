@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { toast } from 'react-hot-toast';
 import { Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-const starLogo = '../public/star.png'
+const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 
 export default function AuthPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
