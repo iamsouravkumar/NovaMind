@@ -5,6 +5,7 @@ import { Trash2, LogOut, Settings } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { chatService } from '../services/chatService';
+const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 
 const UserAvatar = () => {
   const { user, logout } = useAuth();
@@ -104,7 +105,7 @@ const UserAvatar = () => {
               onClick={handleAbout}
               className="w-full text-left px-4 py-2 text-sm text-blue-400 hover:bg-gray-700 flex items-center space-x-2"
             >
-              <img src="/star.png" alt="" className='w-4 h-4'/>
+              <img src={starLogo} alt="" className='w-4 h-4'/>
               <span>About</span>
             </button>
 

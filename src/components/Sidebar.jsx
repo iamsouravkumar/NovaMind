@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { chatService } from '../services/chatService';
 import { toast } from 'react-hot-toast';
 import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
-const starLogo = '/star.png'
+const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 const URL = 'https://iamsouravkumar.github.io/lowcodeGPT/'
 
 const Sidebar = ({onToggle}) => {
