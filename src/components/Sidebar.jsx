@@ -7,7 +7,7 @@ import { chatService } from '../services/chatService';
 import { toast } from 'react-hot-toast';
 import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
 const starLogo = './star.png'
-const URL = 'http://localhost:5173'
+const URL = 'https://iamsouravkumar.github.io/lowcodeGPT/'
 
 const Sidebar = ({onToggle}) => {
   const [chats, setChats] = useState([])
