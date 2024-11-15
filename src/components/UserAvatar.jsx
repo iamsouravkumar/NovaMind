@@ -104,7 +104,7 @@ const UserAvatar = () => {
               onClick={handleAbout}
               className="w-full text-left px-4 py-2 text-sm text-blue-400 hover:bg-gray-700 flex items-center space-x-2"
             >
-              <img src="/public/star.png" alt="" className='w-4 h-4'/>
+              <img src="/star.png" alt="" className='w-4 h-4'/>
               <span>About</span>
             </button>
 
