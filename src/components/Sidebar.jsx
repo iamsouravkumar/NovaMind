@@ -51,6 +51,7 @@ const Sidebar = ({ onToggle }) => {
     if (selectedChatId === chat.id) {
       // If the chat is already selected, close it
       navigate('/');
+      document.title = 'LowCode GPT';
       if (isMobile) {
         setIsOpen(false);
       }
@@ -59,7 +60,7 @@ const Sidebar = ({ onToggle }) => {
       // Otherwise, open the new chat
       setSelectedChatId(chat.id);
       navigate(`/chat/${chat.id}`);
-      // document.body.title = chat?.title?.length > 0 ? chat?.title?.substring(0, 30) : 'LowCode GPT';
+      document.title = chat.title.length > 0 ? chat.title.slice(0, 30) : 'LowCode GPT';
       if (isMobile) {
         setIsOpen(false);
       }

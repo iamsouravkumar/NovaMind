@@ -69,6 +69,7 @@ const Chat = ({ isSidebarOpen }) => {
 
     // Update messages state with the new user message
     setMessages(prevMessages => [...prevMessages, newMessage]);
+    document.title = userMessage.length > 0 ? userMessage.slice(0, 30) : 'Untitle Chat';
 
     // Use setTimeout to delay showing the bot's placeholder
     setTimeout(() => {
@@ -81,15 +82,18 @@ const Chat = ({ isSidebarOpen }) => {
       setMessages(prevMessages => [...prevMessages, botPlaceholder]);
     }, 300); // Adjust the delay as needed (e.g., 500 milliseconds)
 
+    
     try {
       let newChatId;
-
+      
       if (chatId) {
         // Add message to existing chat
         await chatService.addMessage(chatId, userMessage, selectedModel); // Pass the selected model
       } else {
         // Create new chat and get the new chat ID
         newChatId = await chatService.createChat(userMessage, selectedModel); // Pass the selected model
+        
+        console.log(userMessage.slice(0, 30));
         navigate(`/chat/${newChatId}`); // Redirect to the new chat
       }
 
@@ -161,8 +165,8 @@ const Chat = ({ isSidebarOpen }) => {
     <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[80%] ml-[20%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
       {createChatLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader /> 
-          {/* <p className='text-gray-300 animate-bounce text-sm'>Creating new chat...</p> */}
+          <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader />
+            {/* <p className='text-gray-300 animate-bounce text-sm'>Creating new chat...</p> */}
           </div>
         </div>
       )}
@@ -177,7 +181,7 @@ const Chat = ({ isSidebarOpen }) => {
         ) : (
           // Render user avatar here if not on chat page
           <div className='z-50'>
-          <UserAvatar />
+            <UserAvatar />
           </div>
         )}
 
@@ -199,10 +203,10 @@ const Chat = ({ isSidebarOpen }) => {
 
         {!isChatPage && (
           <div className={`ml-[2%] max-md:ml-0 ${!isSidebarOpen ? 'transition-all duration-300 ease-in-out lg:ml-[4%]' : ''}`}>
-          <ModelSelectionModal
-            selectedModel={selectedModel}
-            onSelectModel={setSelectedModel}
-          />
+            <ModelSelectionModal
+              selectedModel={selectedModel}
+              onSelectModel={setSelectedModel}
+            />
           </div>
         )}
 
@@ -313,7 +317,7 @@ const Chat = ({ isSidebarOpen }) => {
           </button>
         </form>
       </div>
-            <p className='text-xs text-gray-400 text-center mb-1 max-md:hidden'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p>
+      <p className='text-xs text-gray-400 text-center mb-1 max-md:hidden'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p>
     </div>
   );
 };

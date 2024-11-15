@@ -54,6 +54,7 @@ export const chatService = {
       const chatRef = await addDoc(collection(db, 'chats'), {
         userId: auth.currentUser.uid,
         title: userMessage.slice(0, 30),
+        
         messages: [
           {
             content: userMessage,
@@ -69,14 +70,15 @@ export const chatService = {
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp()
       });
-
+      
       return chatRef.id;
     } catch (error) {
       console.error('Error creating chat:', error);
       throw error;
     }
   },
-
+  
+  
   // Add message to existing chat
   async addMessage(chatId, userMessage, selectedModel) {
     try {
