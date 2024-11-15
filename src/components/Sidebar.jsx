@@ -7,9 +7,8 @@ import { chatService } from '../services/chatService';
 import { toast } from 'react-hot-toast';
 import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
 const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
-const URL = 'https://iamsouravkumar.github.io/lowcodeGPT/'
 
-const Sidebar = ({onToggle}) => {
+const Sidebar = ({ onToggle }) => {
   const [chats, setChats] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedChatId, setSelectedChatId] = useState(null)
@@ -19,7 +18,7 @@ const Sidebar = ({onToggle}) => {
   const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
   const [editingChatId, setEditingChatId] = useState(null);
   const [newTitle, setNewTitle] = useState('');
-  
+
   const isMobile = useMediaQuery({ maxWidth: 768 })
 
   const chatRefs = useRef([]) // Array to store references to chat list items
@@ -73,7 +72,7 @@ const Sidebar = ({onToggle}) => {
       setModalOpen(false);
       if (location.pathname.includes(chatId)) {
         navigate('/');
-        if(isMobile){
+        if (isMobile) {
           setIsOpen(false);
         }
       }
@@ -89,7 +88,7 @@ const Sidebar = ({onToggle}) => {
       await chatService.updateTitle(chatId, newTitle);
       setModalOpen(false);
       toast.success('Title updated');
-      if(isMobile){
+      if (isMobile) {
         setIsOpen(false);
       }
     } catch (error) {
@@ -268,7 +267,7 @@ const Sidebar = ({onToggle}) => {
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img src={starLogo} alt="LowCode GPT Logo" className="h-6 w-6" />
-                <h1 className="text-lg font-bold"><a href="http://localhost:5173" className="text-gray-100 hover:underline">LowCode GPT</a></h1>
+                <h1 className="text-lg font-bold"><a href="https://iamsouravkumar.github.io/lowcodeGPT/" className="text-gray-100 hover:underline">LowCode GPT</a></h1>
               </div>
               <button
                 onClick={toggleSidebar}
@@ -331,10 +330,10 @@ const Sidebar = ({onToggle}) => {
                 className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg"
                 onClick={() => handleEditTitleClick(selectedChatId, chats.find(chat => chat.id === selectedChatId)?.title || '')}
               >
-                <p className="flex items-center gap-2"><BsPencil size={15} className='text-blue-500'/> Change Title </p> 
+                <p className="flex items-center gap-2"><BsPencil size={15} className='text-blue-500' /> Change Title </p>
               </button>
-              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => handleDeleteChat(selectedChatId)}><p className='flex items-center gap-2'><BsTrash size={15} className='text-red-500'/> Delete Chat</p></button>
-              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => setModalOpen(false)}><p className='flex items-center gap-2'><BsXLg size={15} className='text-orange-500'/> Close</p></button>
+              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => handleDeleteChat(selectedChatId)}><p className='flex items-center gap-2'><BsTrash size={15} className='text-red-500' /> Delete Chat</p></button>
+              <button className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg" onClick={() => setModalOpen(false)}><p className='flex items-center gap-2'><BsXLg size={15} className='text-orange-500' /> Close</p></button>
             </div>
           </motion.div>
         )}
