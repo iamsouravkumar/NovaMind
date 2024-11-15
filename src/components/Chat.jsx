@@ -10,7 +10,7 @@ import ModelSelectionModal from './ModelSelectionModal';
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import CreateMsgLoader from './CreateMsgLoader';
 import PredefinedPrompts from './PredefinedPrompts';
-const starLogo = '../public/star.png'
+const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 import '../App.css'
 
 const Chat = ({ isSidebarOpen }) => {
