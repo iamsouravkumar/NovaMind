@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { FaChevronDown } from "react-icons/fa6";
 
 const ModelSelectionModal = ({ selectedModel, onSelectModel }) => {
     const [showDropdown, setShowDropdown] = useState(false);
@@ -17,7 +18,7 @@ const ModelSelectionModal = ({ selectedModel, onSelectModel }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
             >
-                <span className="text-white text-sm flex ">Model: {selectedModel}</span>
+                <span className="text-white text-sm flex items-center gap-2 ">Model: {selectedModel} <FaChevronDown className={`${showDropdown ? 'transition-all duration-200 rotate-180' : ''}`} /></span>
             </motion.button>
 
             <AnimatePresence>

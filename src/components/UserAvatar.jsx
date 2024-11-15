@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { LogOut, Settings, User } from 'lucide-react';
+import { Trash2, LogOut, Settings } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { chatService } from '../services/chatService';
 
 const UserAvatar = () => {
   const { user, logout } = useAuth();
@@ -19,6 +20,28 @@ const UserAvatar = () => {
       console.error('Logout error:', error);
       toast.error('Failed to logout');
     }
+  };
+
+  const handleDeleteAllChats = async () => {
+    try {
+      await chatService.deleteAllChats();
+      setShowDropdown(false);
+      toast.success('Chats history deleted successfully');
+    } catch (error) {
+      if (error.message === 'No chats to delete') {
+        toast.error('No chats to delete');
+        setShowDropdown(false);
+      } else {
+        console.error('Error:', error);
+        toast.error('Failed to delete chats history');
+        setShowDropdown(false);
+      }
+    }
+  };
+
+  const handleAbout = () => {
+    navigate('/about');
+    setShowDropdown(false);
   };
 
   return (
@@ -69,6 +92,22 @@ const UserAvatar = () => {
               <span>Settings</span>
             </button>
             
+            <button
+              onClick={handleDeleteAllChats}
+              className="w-full text-left px-4 py-2 text-sm text-orange-400 hover:bg-gray-700 flex items-center space-x-2"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Clear History</span>
+            </button>
+
+            <button
+              onClick={handleAbout}
+              className="w-full text-left px-4 py-2 text-sm text-blue-400 hover:bg-gray-700 flex items-center space-x-2"
+            >
+              <img src="../public/star.png" alt="" className='w-4 h-4'/>
+              <span>About</span>
+            </button>
+
             <button
               onClick={handleLogout}
               className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-700 flex items-center space-x-2"

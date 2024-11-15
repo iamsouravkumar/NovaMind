@@ -7,8 +7,9 @@ import { chatService } from '../services/chatService';
 import { toast } from 'react-hot-toast';
 import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
 const starLogo = '../public/star.png'
+const URL = 'http://localhost:5173'
 
-const Sidebar = () => {
+const Sidebar = ({onToggle}) => {
   const [chats, setChats] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedChatId, setSelectedChatId] = useState(null)
@@ -44,6 +45,7 @@ const Sidebar = () => {
 
   const toggleSidebar = () => {
     setIsOpen(!isOpen)
+    onToggle(!isOpen)
   }
 
   const handleChatSelect = (chat) => {
@@ -58,6 +60,7 @@ const Sidebar = () => {
       // Otherwise, open the new chat
       setSelectedChatId(chat.id);
       navigate(`/chat/${chat.id}`);
+      // document.body.title = chat?.title?.length > 0 ? chat?.title?.substring(0, 30) : 'LowCode GPT';
       if (isMobile) {
         setIsOpen(false);
       }
@@ -265,7 +268,7 @@ const Sidebar = () => {
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img src={starLogo} alt="LowCode GPT Logo" className="h-6 w-6" />
-                <h1 className="text-lg font-bold">LowCode GPT</h1>
+                <h1 className="text-lg font-bold"><a href="http://localhost:5173" className="text-gray-100 hover:underline">LowCode GPT</a></h1>
               </div>
               <button
                 onClick={toggleSidebar}
@@ -296,7 +299,7 @@ const Sidebar = () => {
                       <>
                         {renderChatGroup(groups.today, 'Today')}
                         {renderChatGroup(groups.yesterday, 'Yesterday')}
-                        {renderChatGroup(groups.thisWeek, 'Previous 7 Days')}
+                        {renderChatGroup(groups.thisWeek, '7 Days Ago')}
                         {renderChatGroup(groups.thisMonth, 'This Month')}
                         {renderChatGroup(groups.older, 'Older')}
                       </>
@@ -343,7 +346,7 @@ const Sidebar = () => {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]"
           >
             <div className="bg-gray-800 p-6 rounded-lg w-80">
@@ -389,6 +392,7 @@ const Sidebar = () => {
           <BsLayoutSidebarInset className="w-6 h-6" />
         </motion.button>
       )}
+      <div className={`fixed bottom-1 w-full text-xs text-gray-400 text-center mb-1 lg:hidden transition-all ease-in-out duration-1000 ${!isOpen ? 'hidden' : 'z-50'}`}><p className='text-center'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p></div>
     </div>
   );
 };

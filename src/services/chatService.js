@@ -15,7 +15,8 @@ import {
   deleteDoc,
   arrayUnion,
   Timestamp,
-  getDoc
+  getDoc,
+  getDocs
 } from 'firebase/firestore';
 
 // Initialize Gemini AI
@@ -147,6 +148,22 @@ export const chatService = {
     } catch (error) {
       console.error('Error deleting chat:', error);
       throw error;
+    }
+  },
+
+  // Delete all chats
+  async deleteAllChats() {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'chats'));
+      if (querySnapshot.empty) { // Check if there are no chats
+        throw new Error('No chats to delete');
+      }
+      querySnapshot.forEach(doc => {
+        deleteDoc(doc.ref);
+      });
+    } catch (error) {
+      console.error('Error deleting all chats:', error);
+      throw error; // Rethrow the error for handling in the calling function
     }
   },
 

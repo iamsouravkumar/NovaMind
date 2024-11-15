@@ -1,19 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, Send, Code, Image, FileText, HelpCircle } from 'lucide-react';
+import { Loader2, Send } from 'lucide-react';
 import { chatService } from '../services/chatService';
 import { toast } from 'react-hot-toast';
 import UserAvatar from './UserAvatar';
 import ChatLoader from './ChatLoader';
 import ModelSelectionModal from './ModelSelectionModal';
-import '../App.css'
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import CreateMsgLoader from './CreateMsgLoader';
 import PredefinedPrompts from './PredefinedPrompts';
 const starLogo = '../public/star.png'
+import '../App.css'
 
-const Chat = () => {
+const Chat = ({ isSidebarOpen }) => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
@@ -74,7 +74,7 @@ const Chat = () => {
     setTimeout(() => {
       // Add a placeholder for the bot's response after a delay
       const botPlaceholder = {
-        content: "AI is thinking...",
+        content: 'LowCode GPT is Analyzing...',
         role: 'assistant',
         loading: true, // Indicate that this message is loading
       };
@@ -115,7 +115,8 @@ const Chat = () => {
       }
       setInput(userMessage); // Restore the input on error
     } finally {
-      setLoading(false); // Reset loading state
+      setLoading(false);
+      setMsgLoading(false); // Reset loading state
     }
   };
 
@@ -147,14 +148,6 @@ const Chat = () => {
     });
   };
 
-  // Predefined prompts
-  const predefinedPrompts = [
-    { text: "Generate code", icon: Code, prompt: "Generate a React component for a todo list" },
-    { text: "Create image", icon: Image, prompt: "Create an image of a futuristic city" },
-    { text: "Summarize text", icon: FileText, prompt: "Summarize the following text: [paste your text here]" },
-    { text: "Ask for help", icon: HelpCircle, prompt: "How do I use async/await in JavaScript?" },
-  ];
-
   const handlePredefinedPrompt = (prompt) => {
     setInput(prompt);
   };
@@ -165,7 +158,7 @@ const Chat = () => {
   const isChatPage = window.location.pathname === `/chat/${chatId}`;
 
   return (
-    <div className="fixed top-0 flex flex-col h-[100%] w-[80%] ml-[20%] dark:bg-gray-900 max-md:w-[100%] max-md:ml-0">
+    <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[80%] ml-[20%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
       {createChatLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader /> 
@@ -183,11 +176,13 @@ const Chat = () => {
           </button>
         ) : (
           // Render user avatar here if not on chat page
+          <div className='z-50'>
           <UserAvatar />
+          </div>
         )}
 
         {isChatPage && (
-          <div className="max-md:hidden fixed top-4 left-[22%]">
+          <div className={`max-md:hidden fixed top-[10px] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'left-[22%]' : 'left-[5%]'}`}>
             <ModelSelectionModal
               selectedModel={selectedModel}
               onSelectModel={setSelectedModel}
@@ -203,10 +198,12 @@ const Chat = () => {
 
 
         {!isChatPage && (
+          <div className={`ml-[2%] max-md:ml-0 ${!isSidebarOpen ? 'transition-all duration-300 ease-in-out lg:ml-[4%]' : ''}`}>
           <ModelSelectionModal
             selectedModel={selectedModel}
             onSelectModel={setSelectedModel}
           />
+          </div>
         )}
 
       </div>
@@ -224,22 +221,22 @@ const Chat = () => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col justify-center h-full text-center max-md:mx-auto"
             >
-              <motion.div className="flex justify-center text-center max-md:mx-auto">
-                {text.split('').map((char, index) => (
+              <motion.div className="flex justify-center text-center max-md:mx-auto max-md:px-3">
+                {text.split(' ').map((char, index) => (
                   <motion.span
                     key={index}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: index * 0.05 }} // Delay for each character
-                    className="text-2xl font-bold mb text-gray-100 dark:text-gray-300 mx-1 max-md:text-sm" // Added mx-1 for spacing
+                    transition={{ delay: index * 0.25 }} // Delay for each character
+                    className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-2xl" // Added mx-1 for spacing
                   >
                     {char}
                   </motion.span>
                 ))}
               </motion.div>
 
-              <div className="flex flex-wrap justify-center gap-4 mt-6">
+              <div className="flex flex-wrap justify-center gap-4 mt-4">
                 {/* {predefinedPrompts.map((item, index) => (
                   <motion.button
                     key={index}
@@ -266,17 +263,19 @@ const Chat = () => {
                 transition={{ duration: 0.3 }}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
-                <div className={`flex items-start space-x-2 max-w-[70%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                <div className={`flex items-start space-x-2 max-w-[70%] max-md:max-w-[90%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   <div className='flex flex-row my-4 max-w-2xl max-md:my-3'>
                     {message.role !== 'user' && ( // Show logo only for AI messages
-                      <div><img src={starLogo} alt="LowCode GPT" height={35} width={35} className="max-md:hidden" /></div>
+                      <div className="flex-shrink-0">
+                        <img src={starLogo} alt="LowCode GPT" height={35} width={35} className={`max-md:hidden ${message.loading ? 'animate-spin' : ''}`} />
+                      </div>
                     )}
                     <div className={`rounded-lg p-3 mx-3 ${message.role === 'user'
                       ? 'bg-blue-500 text-white'
                       : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 '
-                      }`}>
+                      } ${message.loading ? 'animate-pulse' : ''}`}>
                       <div className='flex'>
-                        <p className={`text-sm whitespace-pre-wrap arial ${message.role === 'assistant' ? 'max-md:max-w-48' : ''}`} dangerouslySetInnerHTML={{ __html: formatMessageContent(message.content) }} />
+                        <p className={`text-sm whitespace-pre-wrap arial ${message.role === 'assistant' ? '' : ''}`} dangerouslySetInnerHTML={{ __html: formatMessageContent(message.content) }} />
                       </div>
                     </div>
                   </div>
@@ -288,7 +287,7 @@ const Chat = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative w-full max-w-4xl mx-auto mb-4 p-[3px] rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run max-md:w-[90%]">
+      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run max-md:w-[90%]">
         <form onSubmit={handleSendMessage} className="relative flex items-center bg-[#212121] rounded-full">
           <div className="relative flex-grow">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift rounded-full"></div>
@@ -314,7 +313,7 @@ const Chat = () => {
           </button>
         </form>
       </div>
-
+            <p className='text-xs text-gray-400 text-center mb-1 max-md:hidden'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p>
     </div>
   );
 };
