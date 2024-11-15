@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { GoogleAIFileManager } from "@google/generative-ai/server";
+// import { GoogleAIFileManager } from "@google/generative-ai/server";
 import { db, auth } from '../config/firebase';
 import {toast} from 'react-hot-toast'
 import { 
@@ -21,7 +21,7 @@ import {
 
 // Initialize Gemini AI
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_API_KEY);
-const fileManager = new GoogleAIFileManager(import.meta.env.VITE_GEMINI_API_KEY);
+// const fileManager = new GoogleAIFileManager(import.meta.env.VITE_GEMINI_API_KEY);
 
 export const chatService = {
   // Generate AI response directly using Gemini
