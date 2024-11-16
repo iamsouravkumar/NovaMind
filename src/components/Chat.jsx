@@ -21,6 +21,7 @@ const Chat = ({ isSidebarOpen }) => {
   const [selectedModel, setSelectedModel] = useState('gemini-1.5-pro')
   const [chatLoading, setChatLoading] = useState(false)
   const [createChatLoading, setCreateChatLoading] = useState(false)
+  const [firstMessageSent, setFirstMessageSent] = useState(false)
 
   const { chatId } = useParams()
   const navigate = useNavigate()
@@ -60,6 +61,7 @@ const Chat = ({ isSidebarOpen }) => {
     if (textarea) {
       textarea.style.height = '35px'
       textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
     }
   }
 
@@ -78,7 +80,11 @@ const Chat = ({ isSidebarOpen }) => {
     }
 
     setMessages(prevMessages => [...prevMessages, newMessage])
-    document.title = userMessage.length > 0 ? userMessage.slice(0, 30) : 'Untitle Chat'
+
+    if (!firstMessageSent) {
+      document.title = userMessage.length > 0 ? userMessage.slice(0, 30) : 'Untitled Chat'
+      setFirstMessageSent(true)
+    }
 
     setTimeout(() => {
       const botPlaceholder = {
@@ -120,6 +126,13 @@ const Chat = ({ isSidebarOpen }) => {
     } finally {
       setLoading(false)
       setMsgLoading(false)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      handleSendMessage(e)
     }
   }
 
@@ -265,20 +278,21 @@ const Chat = ({ isSidebarOpen }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run transition-all duration-300 ease-in-out max-md:w-[90%]" style={{borderRadius: input.length > 0 ? '0.5rem' : '2rem'}}>
-        <form onSubmit={handleSendMessage} className="relative flex bg-[#212121] transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '0.5rem' : '2rem', alignItems:input.length > 0 ? 'end' : 'center'}}>
+      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run transition-all duration-300 ease-in-out max-md:w-[90%]" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}>
+        <form onSubmit={handleSendMessage} className="relative flex bg-[#212121] transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '1rem' : '2rem', alignItems:input.length > 0 ? 'end' : 'center'}}>
           <div className="relative flex-grow">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '0.5rem' : '2rem'}}></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}></div>
             <textarea
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
               placeholder="Message LowCode GPT..."
               className="w-full px-6 py-3 bg-transparent text-white placeholder-gray-100 focus:outline-none relative z-10 max-md:placeholder:text-sm resize-none flex items-center"
               style={{
                 minHeight: '35px',
                 maxHeight: '150px',
-                borderRadius: input.length > 0 ? '0.5rem' : '2rem',
+                borderRadius: input.length > 0 ? '1rem' : '2rem',
               }}
             />
           </div>
