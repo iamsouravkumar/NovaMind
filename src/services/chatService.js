@@ -54,6 +54,8 @@ export const chatService = {
       const chatRef = await addDoc(collection(db, 'chats'), {
         userId: auth.currentUser.uid,
         title: userMessage.slice(0, 30),
+        model: selectedModel,
+        archived: false,
         
         messages: [
           {
@@ -131,6 +133,7 @@ export const chatService = {
     const q = query(
       collection(db, 'chats'),
       where('userId', '==', auth.currentUser.uid),
+      where('archived', '==', false), // Only subscribe to non-archived chats
       orderBy('updatedAt', 'desc')
     );
 
@@ -142,6 +145,25 @@ export const chatService = {
       callback(chats);
     });
   },
+
+  // Archive chat
+  // async archiveChat(chatId) {
+  //   // Validate chatId
+  //   if (typeof chatId !== 'string' || chatId.trim() === '') {
+  //     throw new Error('Invalid chat ID provided for archiving.');
+  //   }
+
+  //   try {
+  //     const chatRef = doc(db, 'chats', chatId);
+  //     await updateDoc(chatRef, {
+  //       archived: true,
+  //       updatedAt: serverTimestamp()
+  //     });
+  //   } catch (error) {
+  //     console.error('Error archiving chat:', error);
+  //     throw error;
+  //   }
+  // },
 
   // Delete chat
   async deleteChat(chatId) {
@@ -209,4 +231,24 @@ export const chatService = {
   //     throw error;
   //   }
   // }
+
+  async fetchArchivedChats() {
+    try {
+        const q = query(
+            collection(db, 'chats'),
+            where('userId', '==', auth.currentUser.uid),
+            where('archived', '==', true), // Fetch only archived chats
+            orderBy('updatedAt', 'desc')
+        );
+        const querySnapshot = await getDocs(q);
+        const archivedChats = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        return archivedChats; // Return the fetched archived chats
+    } catch (error) {
+        console.error('Error fetching archived chats:', error);
+        throw error; // Rethrow the error for handling in the calling function
+    }
+  }
 }; 
