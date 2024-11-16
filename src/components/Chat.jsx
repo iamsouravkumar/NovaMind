@@ -1,185 +1,174 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, Send } from 'lucide-react';
-import { chatService } from '../services/chatService';
-import { toast } from 'react-hot-toast';
-import UserAvatar from './UserAvatar';
-import ChatLoader from './ChatLoader';
-import ModelSelectionModal from './ModelSelectionModal';
-import { HiMiniPencilSquare } from "react-icons/hi2";
-import CreateMsgLoader from './CreateMsgLoader';
-import PredefinedPrompts from './PredefinedPrompts';
+import React, { useState, useEffect, useRef } from 'react'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
+import { motion, AnimatePresence } from 'framer-motion'
+import { Loader2, Send } from 'lucide-react'
+import { chatService } from '../services/chatService'
+import { toast } from 'react-hot-toast'
+import UserAvatar from './UserAvatar'
+import ChatLoader from './ChatLoader'
+import ModelSelectionModal from './ModelSelectionModal'
+import { HiMiniPencilSquare } from "react-icons/hi2"
+import CreateMsgLoader from './CreateMsgLoader'
+import PredefinedPrompts from './PredefinedPrompts'
 const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 import '../App.css'
 
 const Chat = ({ isSidebarOpen }) => {
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [msgLoading, setMsgLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState('gemini-1.5-pro');
-  const [chatLoading, setChatLoading] = useState(false);
-  const [createChatLoading, setCreateChatLoading] = useState(false);
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [msgLoading, setMsgLoading] = useState(false)
+  const [selectedModel, setSelectedModel] = useState('gemini-1.5-pro')
+  const [chatLoading, setChatLoading] = useState(false)
+  const [createChatLoading, setCreateChatLoading] = useState(false)
 
-  const { chatId } = useParams();
-  const navigate = useNavigate();
-  const messagesEndRef = useRef(null);
+  const { chatId } = useParams()
+  const navigate = useNavigate()
+  const messagesEndRef = useRef(null)
+  const textareaRef = useRef(null)
 
-  // Subscribe to messages for the current chat
   useEffect(() => {
-    let unsubscribe;
+    let unsubscribe
 
     if (chatId) {
-      setChatLoading(true);
+      setChatLoading(true)
       unsubscribe = chatService.subscribeToChats((chats) => {
-        const currentChat = chats.find(chat => chat.id === chatId);
+        const currentChat = chats.find(chat => chat.id === chatId)
         if (currentChat) {
-          setMessages(currentChat.messages || []);
-          setChatLoading(false);
+          setMessages(currentChat.messages || [])
+          setChatLoading(false)
         }
-      });
+      })
     } else {
-      setMessages([]);
-      setChatLoading(false);
+      setMessages([])
+      setChatLoading(false)
     }
 
-    return () => unsubscribe && unsubscribe();
-  }, [chatId]);
+    return () => unsubscribe && unsubscribe()
+  }, [chatId])
 
-  // Auto scroll to bottom when messages change
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  useEffect(() => {
+    adjustTextareaHeight()
+  }, [input])
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current
+    if (textarea) {
+      textarea.style.height = '35px'
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`
+    }
+  }
 
   const handleSendMessage = async (e) => {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
+    e.preventDefault()
+    if (!input.trim() || loading) return
 
-    const userMessage = input.trim();
-    setInput('');
-    setLoading(true); // Set loading to true immediately
-    setMsgLoading(true); // Set msgLoading to true for the bot's response
+    const userMessage = input.trim()
+    setInput('')
+    setLoading(true)
+    setMsgLoading(true)
 
-    // Immediately add the user's message to the chat
     const newMessage = {
       content: userMessage,
       role: 'user',
-    };
+    }
 
-    // Update messages state with the new user message
-    setMessages(prevMessages => [...prevMessages, newMessage]);
-    document.title = userMessage.length > 0 ? userMessage.slice(0, 30) : 'Untitle Chat';
+    setMessages(prevMessages => [...prevMessages, newMessage])
+    document.title = userMessage.length > 0 ? userMessage.slice(0, 30) : 'Untitle Chat'
 
-    // Use setTimeout to delay showing the bot's placeholder
     setTimeout(() => {
-      // Add a placeholder for the bot's response after a delay
       const botPlaceholder = {
         content: 'LowCode GPT is Analyzing...',
         role: 'assistant',
-        loading: true, // Indicate that this message is loading
-      };
-      setMessages(prevMessages => [...prevMessages, botPlaceholder]);
-    }, 300); // Adjust the delay as needed (e.g., 500 milliseconds)
+        loading: true,
+      }
+      setMessages(prevMessages => [...prevMessages, botPlaceholder])
+    }, 300)
 
-    
     try {
-      let newChatId;
-      
+      let newChatId
+
       if (chatId) {
-        // Add message to existing chat
-        await chatService.addMessage(chatId, userMessage, selectedModel); // Pass the selected model
+        await chatService.addMessage(chatId, userMessage, selectedModel)
       } else {
-        // Create new chat and get the new chat ID
-        newChatId = await chatService.createChat(userMessage, selectedModel); // Pass the selected model
-        
-        console.log(userMessage.slice(0, 30));
-        navigate(`/chat/${newChatId}`); // Redirect to the new chat
+        newChatId = await chatService.createChat(userMessage, selectedModel)
+        navigate(`/chat/${newChatId}`)
       }
 
-      // Use the existing generateResponse function to get the bot's response
-      const botResponse = await chatService.generateResponse(userMessage, selectedModel); // Pass the selected model
+      const botResponse = await chatService.generateResponse(userMessage, selectedModel)
 
-      // Update the messages state with the actual bot response
       setMessages(prevMessages => {
-        // Replace the loader with the actual response
         return prevMessages.map(msg =>
           msg.loading ? { content: botResponse, role: 'assistant' } : msg
-        );
-      });
+        )
+      })
 
     } catch (error) {
-      console.error('Error sending message:', error);
+      console.error('Error sending message:', error)
       if (error.message.includes('blocked due to safety')) {
-        toast.error('Your message was blocked due to safety concerns. Please try rephrasing it.'); // User-friendly message
+        toast.error('Your message was blocked due to safety concerns. Please try rephrasing it.')
       } else if (error.message.includes('Candidate was blocked due to RECITATION')) {
-        toast.error('Your message was blocked due to recitation concerns. Please try rephrasing it.');
+        toast.error('Your message was blocked due to recitation concerns. Please try rephrasing it.')
       } else {
-        toast.error('Failed to send message');
+        toast.error('Failed to send message')
       }
-      setInput(userMessage); // Restore the input on error
+      setInput(userMessage)
     } finally {
-      setLoading(false);
-      setMsgLoading(false); // Reset loading state
+      setLoading(false)
+      setMsgLoading(false)
     }
-  };
+  }
 
   const handleNewChat = async () => {
-    // Create a new chat and navigate to it
-    setCreateChatLoading(true);
-    const newChatId = await chatService.createChat('Hii', selectedModel); // Create a new chat with an empty message
-    navigate(`/chat/${newChatId}`); // Redirect to the new chat
-    setCreateChatLoading(false);
-  };
+    setCreateChatLoading(true)
+    const newChatId = await chatService.createChat('Hii', selectedModel)
+    navigate(`/chat/${newChatId}`)
+    setCreateChatLoading(false)
+  }
 
   const formatMessageContent = (content) => {
-    // Replace **bold text** with <strong>bold text</strong>
-    const boldTextRegex = /\*\*(.*?)\*\*/g; // Matches **text**
-    const codeTextRegex = /`([^`]+)`/g; // Matches `code`
+    const boldTextRegex = /\*\*(.*?)\*\*/g
+    const codeTextRegex = /`([^`]+)`/g
 
     return content
-      .replace(boldTextRegex, '<strong>$1</strong>') // Replace bold text
+      .replace(boldTextRegex, '<strong>$1</strong>')
       .replace(codeTextRegex, (match, code) =>
         `<div class="relative"><pre class="bg-gray-200 p-2 rounded"><code>${code}</code></pre>
-        <button class="copy-button absolute top-0 right-0 p-2" onclick="copyToClipboard('${code.replace(/'/g, "\\'").replace(/"/g, '\\"')}')">📋</button></div>`); // Escape single and double quotes
-  };
+        <button class="copy-button absolute top-0 right-0 p-2" onclick="copyToClipboard('${code.replace(/'/g, "\\'").replace(/"/g, '\\"')}')">📋</button></div>`)
+  }
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
-      toast.success('Copied to clipboard!'); // Notify user
+      toast.success('Copied to clipboard!')
     }).catch(err => {
-      console.error('Failed to copy: ', err);
-    });
-  };
+      console.error('Failed to copy: ', err)
+    })
+  }
 
   const handlePredefinedPrompt = (prompt) => {
-    setInput(prompt);
-  };
+    setInput(prompt)
+  }
 
-  const text = "How can I help you today?"; // Define the text to animate
-
-  // Add this condition to check if the current location is the chat page
-  const isChatPage = window.location.pathname === `/chat/${chatId}`;
+  const text = "How can I help you today?"
+  const isChatPage = window.location.pathname === `/chat/${chatId}`
 
   return (
     <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-300 ease-in-out ${isSidebarOpen ? 'w-[80%] ml-[20%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
       {createChatLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader />
-            {/* <p className='text-gray-300 animate-bounce text-sm'>Creating new chat...</p> */}
-          </div>
+          <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader /></div>
         </div>
       )}
-      {/* <div className='flex justify-end max-md:hidden h-4'><UserAvatar /></div> */}
       <div className={`flex ${isChatPage ? 'justify-end' : 'justify-between flex-row-reverse max-md:ml-28'} items-center p-1`}>
-
         {isChatPage ? (
-
           <button className="text-gray-400 hover:text-white transition-colors duration-200 p-1">
             <HiMiniPencilSquare className="w-8 h-8 lg:hidden" onClick={handleNewChat} />
           </button>
         ) : (
-          // Render user avatar here if not on chat page
           <div className='z-50'>
             <UserAvatar />
           </div>
@@ -200,7 +189,6 @@ const Chat = ({ isSidebarOpen }) => {
           </div>
         )}
 
-
         {!isChatPage && (
           <div className={`ml-[2%] max-md:ml-0 ${!isSidebarOpen ? 'transition-all duration-300 ease-in-out lg:ml-[4%]' : ''}`}>
             <ModelSelectionModal
@@ -209,7 +197,6 @@ const Chat = ({ isSidebarOpen }) => {
             />
           </div>
         )}
-
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 max-md:p-2">
@@ -232,8 +219,8 @@ const Chat = ({ isSidebarOpen }) => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: index * 0.25 }} // Delay for each character
-                    className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-2xl" // Added mx-1 for spacing
+                    transition={{ delay: index * 0.25 }}
+                    className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-2xl"
                   >
                     {char}
                   </motion.span>
@@ -241,21 +228,8 @@ const Chat = ({ isSidebarOpen }) => {
               </motion.div>
 
               <div className="flex flex-wrap justify-center gap-4 mt-4">
-                {/* {predefinedPrompts.map((item, index) => (
-                  <motion.button
-                    key={index}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="flex flex-col items-center p-4 bg-gray-800 rounded-lg shadow-md hover:bg-gray-700 transition-colors duration-200"
-                    onClick={() => handlePredefinedPrompt(item.prompt)}
-                  >
-                    <item.icon className="w-8 h-8 mb-2 text-blue-400" />
-                    <span className="text-sm text-gray-300">{item.text}</span>
-                  </motion.button>
-                ))} */}
                 <PredefinedPrompts onPromptSelect={handlePredefinedPrompt} />
               </div>
-
             </motion.div>
           ) : (
             messages.map((message, index) => (
@@ -269,7 +243,7 @@ const Chat = ({ isSidebarOpen }) => {
               >
                 <div className={`flex items-start space-x-2 max-w-[70%] max-md:max-w-[90%] ${message.role === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   <div className='flex flex-row my-4 max-w-2xl max-md:my-3'>
-                    {message.role !== 'user' && ( // Show logo only for AI messages
+                    {message.role !== 'user' && (
                       <div className="flex-shrink-0">
                         <img src={starLogo} alt="LowCode GPT" height={35} width={35} className={`max-md:hidden ${message.loading ? 'animate-spin' : ''}`} />
                       </div>
@@ -291,17 +265,21 @@ const Chat = ({ isSidebarOpen }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run max-md:w-[90%]">
-        <form onSubmit={handleSendMessage} className="relative flex items-center bg-[#212121] rounded-full">
+      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run transition-all duration-300 ease-in-out max-md:w-[90%]" style={{borderRadius: input.length > 0 ? '0.5rem' : '2rem'}}>
+        <form onSubmit={handleSendMessage} className="relative flex bg-[#212121] transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '0.5rem' : '2rem', alignItems:input.length > 0 ? 'end' : 'center'}}>
           <div className="relative flex-grow">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift rounded-full"></div>
-            <input
-              type="textarae"
-              placeholder="Message LowCode GPT..."
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '0.5rem' : '2rem'}}></div>
+            <textarea
+              ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              height={40}
-              className="w-full px-6 py-3 bg-transparent text-white placeholder-gray-100 focus:outline-none relative z-10 max-md:placeholder:text-sm"
+              placeholder="Message LowCode GPT..."
+              className="w-full px-6 py-3 bg-transparent text-white placeholder-gray-100 focus:outline-none relative z-10 max-md:placeholder:text-sm resize-none flex items-center"
+              style={{
+                minHeight: '35px',
+                maxHeight: '150px',
+                borderRadius: input.length > 0 ? '0.5rem' : '2rem',
+              }}
             />
           </div>
           <button
@@ -319,7 +297,7 @@ const Chat = ({ isSidebarOpen }) => {
       </div>
       <p className='text-xs text-gray-400 text-center mb-1 max-md:hidden'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p>
     </div>
-  );
-};
+  )
+}
 
-export default Chat;
+export default Chat
