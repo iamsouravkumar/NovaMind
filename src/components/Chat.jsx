@@ -144,15 +144,29 @@ const Chat = ({ isSidebarOpen }) => {
   }
 
   const formatMessageContent = (content) => {
-    const boldTextRegex = /\*\*(.*?)\*\*/g
-    const codeTextRegex = /`([^`]+)`/g
-
-    return content
-      .replace(boldTextRegex, '<strong>$1</strong>')
-      .replace(codeTextRegex, (match, code) =>
-        `<div class="relative"><pre class="bg-gray-200 p-2 rounded"><code>${code}</code></pre>
-        <button class="copy-button absolute top-0 right-0 p-2" onclick="copyToClipboard('${code.replace(/'/g, "\\'").replace(/"/g, '\\"')}')">📋</button></div>`)
-  }
+    // Regular expressions for bold text and code
+    const boldTextRegex = /\*\*(.*?)\*\*/g;
+    const inlineCodeRegex = /`([^`]+)`*/g;
+    const blockCodeRegex = /```([\s\S]*?)```/g;
+  
+    // Replace bold text
+    content = content.replace(boldTextRegex, '<strong>$1</strong>');
+  
+    // Replace block code with proper formatting
+    content = content.replace(blockCodeRegex, (match, code) => `
+      <div class="relative">
+        <pre class="bg-gray-800 text-gray-200 p-3 rounded"><code>${code}</code></pre>
+        <button class="copy-button absolute top-1 right-1 p-1 text-sm bg-gray-700 text-white rounded"
+          onclick="copyToClipboard('${code.replace(/'/g, "\\'").replace(/"/g, '\\"')}')">📋</button>
+      </div>
+    `);
+  
+    // Replace inline code with proper formatting
+    content = content.replace(inlineCodeRegex, '<code class="bg-gray-200 p-1 rounded">$1</code>');
+  
+    return content;
+  };
+  
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {

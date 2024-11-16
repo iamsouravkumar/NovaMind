@@ -16,6 +16,35 @@ code {
 
  /* indigo - #6366f1, pink - #ec4899, purple - #a855f7 */
 
+ code {
+  font-family: monospace;
+  background-color: #f4f4f4;
+  border-radius: 4px;
+  padding: 2px 4px;
+}
+
+pre {
+  font-family: monospace;
+  background-color: #1e293b;
+  border-radius: 4px;
+  padding: 16px;
+  overflow-x: auto;
+}
+
+.copy-button {
+  cursor: pointer;
+  border: none;
+  background-color: #1f2937;
+  color: white;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+.copy-button:hover {
+  background-color: #374151;
+}
+
 .typewriter {
     --blue: #5C86FF;
     --blue-dark: #a855f7;
