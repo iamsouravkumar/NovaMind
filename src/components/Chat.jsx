@@ -13,7 +13,7 @@ import PredefinedPrompts from './PredefinedPrompts'
 const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 import '../App.css'
 
-const Chat = ({ isSidebarOpen }) => {
+const Chat = ({ isSidebarOpen, user }) => {
   const [messages, setMessages] = useState([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -179,7 +179,7 @@ const Chat = ({ isSidebarOpen }) => {
     setInput(prompt)
   }
 
-  const text = "How can I help you today?"
+  const text = `Hey ${user ? user?.name : user?.email}, How can I help you today?`;
   const isChatPage = window.location.pathname === `/chat/${chatId}`
 
   return (
@@ -238,20 +238,10 @@ const Chat = ({ isSidebarOpen }) => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col justify-center h-full text-center max-md:mx-auto"
             >
-              <motion.div className="flex justify-center text-center max-md:mx-auto max-md:px-3">
-                {text.split(' ').map((char, index) => (
-                  <motion.span
-                    key={index}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    transition={{ delay: index * 0.25 }}
-                    className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-2xl"
-                  >
-                    {char}
-                  </motion.span>
-                ))}
-              </motion.div>
+              <div className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-xl">
+                {user ? `Hey ${user?.name},` : user?.email}
+                <span className="block md:inline"> How can I help you today?</span>
+              </div>
 
               <div className="flex flex-wrap justify-center gap-4 mt-4">
                 <PredefinedPrompts onPromptSelect={handlePredefinedPrompt} />
