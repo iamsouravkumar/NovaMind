@@ -223,7 +223,7 @@ const Chat = ({ isSidebarOpen, user }) => {
         )}
 
         {isChatPage && (
-          <div className={`max-md: fixed top-[10px] transition-all duration-200 ease-in-out ${isSidebarOpen ? 'left-[22%] max-md:left-[28%]' : 'left-[5%] max-md:left-[10%]'}`}>
+          <div className={`max-md: fixed top-[10px] transition-all duration-200 ease-in-out ${isSidebarOpen ? 'left-[22%] max-md:left-[28%]' : 'left-[5%] max-md:left-[28%]'}`}>
             <ModelSelectionModal
               selectedModel={selectedModel}
               onSelectModel={setSelectedModel}
@@ -314,7 +314,7 @@ const Chat = ({ isSidebarOpen, user }) => {
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask NovaMind!"
-              className="w-full px-6 py-3 bg-transparent text-white placeholder-gray-100 focus:outline-none relative z-10 max-md:placeholder:text-sm resize-none flex items-center"
+              className="w-full px-6 py-3 bg-transparent text-white placeholder-gray-100 focus:outline-none relative z-10 max-md:placeholder:text-sm placeholder:text-gray-200 resize-none flex items-center"
               style={{
                 minHeight: '35px',
                 maxHeight: '150px',

@@ -126,7 +126,7 @@ export default function AboutUs() {
             </main>
 
             <footer className="bg-black py-6 md:py-4 text-center">
-                <p className="text-gray-200">&copy; 2024 <span className='bg-gradient-to-r from-[#D700FF] to-[#8A00FF] bg-clip-text text-transparent'>Novamind</span>. All rights reserved.</p>
+                <p className="text-gray-200"> <span className='bg-gradient-to-r from-[#D700FF] to-[#8A00FF] bg-clip-text text-transparent'>NovaMind </span>&copy; 2024. All rights reserved.</p>
             </footer>
         </div>
     );
