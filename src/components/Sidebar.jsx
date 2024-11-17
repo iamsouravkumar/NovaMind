@@ -12,7 +12,7 @@ const Sidebar = ({ onToggle }) => {
   const [chats, setChats] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedChatId, setSelectedChatId] = useState(null)
-  const [isOpen, setIsOpen] = useState(true) //for mobile nd chat select
+  const [isOpen, setIsOpen] = useState('lg:w-[20%] max-md:w-[25%] lg:hidden') //for mobile nd chat select
   const [modalOpen, setModalOpen] = useState(false)
   const [modalPosition, setModalPosition] = useState({ top: 0, left: 0 })
   const [editTitleModalOpen, setEditTitleModalOpen] = useState(false);
@@ -255,14 +255,14 @@ const Sidebar = ({ onToggle }) => {
   );
 
   return (
-    <div className={`h-full w-full md:w-[20%] relative ${isOpen ? 'border-r-[1px] border-slate-500/30' : ''} `}>
+    <div className={`h-full w-full md:w-[25%] lg:w-[20%] relative ${isOpen ? 'border-r-[1px] border-slate-500/30' : ''} `}>
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: '100%' }}
             exit={{ width: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.1, ease: 'easeInOut' }}
             className="text-white h-screen w-full md:w-80 bg-[#171717] flex flex-col overflow-hidden fixed top-0 left-0 z-50 md:relative md:z-auto"
           >
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
@@ -318,7 +318,7 @@ const Sidebar = ({ onToggle }) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.2 }}
             className="fixed bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-[60] w-48 md:w-64 max-md:mt-1"
             style={{
               top: modalPosition.top,
@@ -385,14 +385,14 @@ const Sidebar = ({ onToggle }) => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.2 }}
           onClick={toggleSidebar}
           className="fixed top-[8px] left-4 p-2 bg-[#171717] text-white rounded-full hover:bg-gray-700 transition-colors duration-200 z-50"
         >
           <BsLayoutSidebarInset className="w-6 h-6" />
         </motion.button>
       )}
-      <div className={`fixed bottom-1 w-full text-xs text-gray-400 text-center mb-1 lg:hidden transition-all ease-in-out duration-1000 ${!isOpen ? 'hidden' : 'z-50'}`}><p className='text-center'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p></div>
+      <div className={`fixed bottom-1 w-full text-xs text-gray-400 text-center mb-1 lg:hidden md:hidden transition-all ease-in-out duration-1000 ${!isOpen ? 'hidden' : 'z-50'}`}><p className='text-center'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p></div>
     </div>
   );
 };

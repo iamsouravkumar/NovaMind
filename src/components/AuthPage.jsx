@@ -67,7 +67,7 @@ export default function AuthPage() {
     )
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-gray-900 via-[#212121] to-gray-800">
+        <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-gray-900 via-[#212121] to-gray-800">
             {loading && <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"><ImgLoader/></div>}
             <motion.div className="flex flex-col items-center gap-6 p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700 max-md:w-[90%] max-md:p-4">
                 <motion.h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 max-md:text-2xl'>Welcome to LowCode GPT</motion.h2>
