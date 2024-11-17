@@ -43,7 +43,7 @@ export default function AboutUs() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
                 >
-                    Welcome to LowCode GPT
+                    Welcome to NovaMind
                 </motion.h1>
                 <motion.p
                     className="text-lg md:text-xl lg:text-2xl text-gray-300 mb-6 md:mb-8"
@@ -125,7 +125,7 @@ export default function AboutUs() {
             </main>
 
             <footer className="bg-black py-6 md:py-4 text-center">
-                <p className="text-gray-200">&copy; 2024 LowCode GPT. All rights reserved.</p>
+                <p className="text-gray-200">&copy; 2024 NovaMind. All rights reserved.</p>
             </footer>
         </div>
     );

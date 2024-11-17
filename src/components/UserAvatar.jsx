@@ -5,7 +5,7 @@ import { Trash2, LogOut, Settings } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { chatService } from '../services/chatService';
-const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
+const starLogo = './gpt.png'
 
 const UserAvatar = () => {
   const { user, logout } = useAuth();

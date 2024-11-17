@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { toast } from 'react-hot-toast';
 import { Mail } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
+const starLogo = './gpt.png'
 
 export default function AuthPage() {
     const [formData, setFormData] = useState({ email: '', password: '' });
@@ -70,7 +70,7 @@ export default function AuthPage() {
         <div className="flex flex-col items-center justify-center h-full bg-gradient-to-br from-gray-900 via-[#212121] to-gray-800">
             {loading && <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"><ImgLoader/></div>}
             <motion.div className="flex flex-col items-center gap-6 p-8 bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl shadow-2xl border border-gray-700 max-md:w-[90%] max-md:p-4">
-                <motion.h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 max-md:text-2xl'>Welcome to LowCode GPT</motion.h2>
+                <motion.h2 className='text-3xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 max-md:text-2xl'>Welcome to NovaMind</motion.h2>
                 <form onSubmit={handleEmailAuth} className="w-full space-y-4 mb-4">
                     <input type="email" placeholder="Email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg" required />
                     <input type="password" placeholder="Password" value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-4 py-2 bg-gray-700 text-white rounded-lg" required />
@@ -94,7 +94,7 @@ export default function AuthPage() {
                 <button onClick={() => navigate('/about')} className="text-sm text-gray-400 hover:text-white transition-colors">About Us</button>
             </motion.div>
             <motion.footer className='fixed bottom-0 w-full p-3 bg-gradient-to-r from-gray-900 to-black max-md:p-1'>
-                <p className='text-center text-sm text-gray-300 max-md:text-xs'>Made with <span className='text-red-500'>&#10084;</span> by <a href="https://github.com/iamsouravkumar" referrerPolicy="no-referrer" target="_blank" className='text-blue-400 hover:underline'>Sourav.</a> This App is powered by <span className='text-blue-400'>Gemini API</span>.</p>
+                <p className='text-center text-sm text-gray-300 max-md:text-xs'>Made with <span className='text-red-500'>&#10084;</span> by <a href="https://github.com/iamsouravkumar" referrerPolicy="no-referrer" target="_blank" className='text-blue-400 hover:underline'>Sourav.</a> NovaMind &copy; 2024. All rights reserved.</p>
             </motion.footer>
         </div>
     );

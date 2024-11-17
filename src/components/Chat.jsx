@@ -11,8 +11,8 @@ import ModelSelectionModal from './ModelSelectionModal'
 import { HiMiniPencilSquare } from "react-icons/hi2"
 import CreateMsgLoader from './CreateMsgLoader'
 import PredefinedPrompts from './PredefinedPrompts'
-const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
 import '../App.css'
+const starLogo = './gpt.png'
 
 const Chat = ({ isSidebarOpen, user }) => {
   const [messages, setMessages] = useState([])
@@ -91,7 +91,7 @@ const Chat = ({ isSidebarOpen, user }) => {
 
     setTimeout(() => {
       const botPlaceholder = {
-        content: 'LowCode GPT is Analyzing...',
+        content: 'NovaMind is Analyzing...',
         role: 'assistant',
         loading: true,
       }
@@ -202,7 +202,7 @@ const Chat = ({ isSidebarOpen, user }) => {
   const isChatPage = location.pathname === `/chat/${chatId}`;
 
   return (
-    <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-200 ease-in-out ${isSidebarOpen ? 'lg:w-[80%] lg:ml-[20%] md:w-[75%] md:ml-[25%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
+    <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-100 ease-in-out ${isSidebarOpen ? 'lg:w-[80%] lg:ml-[20%] md:w-[75%] md:ml-[25%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
       {createChatLoading && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
           <div className="flex flex-col gap-1 justify-center items-center"><CreateMsgLoader /></div>
@@ -283,7 +283,7 @@ const Chat = ({ isSidebarOpen, user }) => {
                   <div className='flex flex-row my-4 max-w-2xl max-md:my-3'>
                     {message.role !== 'user' && (
                       <div className="flex-shrink-0">
-                        <img src={starLogo} alt="LowCode GPT" height={35} width={35} className={`max-md:hidden ${message.loading ? 'animate-spin' : ''}`} />
+                        <img src={starLogo} alt="NovaMind" height={35} width={35} className={`max-md:hidden ${message.loading ? 'animate-spin' : ''}`} />
                       </div>
                     )}
                     <div className={`rounded-lg p-3 mx-3 ${message.role === 'user'
@@ -313,7 +313,7 @@ const Chat = ({ isSidebarOpen, user }) => {
               required
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder="Message LowCode GPT..."
+              placeholder="Ask NovaMind!"
               className="w-full px-6 py-3 bg-transparent text-white placeholder-gray-100 focus:outline-none relative z-10 max-md:placeholder:text-sm resize-none flex items-center"
               style={{
                 minHeight: '35px',
@@ -335,7 +335,7 @@ const Chat = ({ isSidebarOpen, user }) => {
           </button>
         </form>
       </div>
-      <p className='text-xs text-gray-400 text-center mb-1 max-md:hidden'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p>
+      <p className='text-xs text-gray-400 text-center mb-1 max-md:hidden'>NovaMind can make mistakes and is not guaranteed to be 100% accurate.</p>
     </div>
   )
 }

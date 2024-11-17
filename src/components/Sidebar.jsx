@@ -6,7 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { chatService } from '../services/chatService';
 import { toast } from 'react-hot-toast';
 import { isToday, isYesterday, isThisWeek, isThisMonth, format } from 'date-fns'
-const starLogo = 'https://cdn-icons-png.flaticon.com/128/11618/11618860.png'
+const starLogo = './gpt.png'
 
 const Sidebar = ({ onToggle }) => {
   const [chats, setChats] = useState([])
@@ -51,7 +51,7 @@ const Sidebar = ({ onToggle }) => {
     if (selectedChatId === chat.id) {
       // If the chat is already selected, close it
       navigate('/');
-      document.title = 'LowCode GPT';
+      document.title = 'NovaMind';
       if (isMobile) {
         setIsOpen(false);
       }
@@ -60,7 +60,7 @@ const Sidebar = ({ onToggle }) => {
       // Otherwise, open the new chat
       setSelectedChatId(chat.id);
       navigate(`/chat/${chat.id}`);
-      document.title = chat.title.length > 0 ? chat.title.slice(0, 30) : 'LowCode GPT';
+      document.title = chat.title.length > 0 ? chat.title.slice(0, 30) : 'NovaMind';
       if (isMobile) {
         setIsOpen(false);
       }
@@ -267,8 +267,8 @@ const Sidebar = ({ onToggle }) => {
           >
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
-                <img src={starLogo} alt="LowCode GPT Logo" className="h-6 w-6" />
-                <h1 className="text-lg font-bold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/lowcodeGPT/" className="text-gray-100 hover:underline">LowCode GPT</a></h1>
+                <img src={starLogo} alt="NovaMind Logo" className="h-6 w-6" />
+                <h1 className="text-lg font-bold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/lowcodeGPT/" className="text-gray-100 hover:underline letter-spacing-1">NovaMind</a></h1>
               </div>
               <button
                 onClick={toggleSidebar}
@@ -392,7 +392,7 @@ const Sidebar = ({ onToggle }) => {
           <BsLayoutSidebarInset className="w-6 h-6" />
         </motion.button>
       )}
-      <div className={`fixed bottom-1 w-full text-xs text-gray-400 text-center mb-1 lg:hidden md:hidden transition-all ease-in-out duration-1000 ${!isOpen ? 'hidden' : 'z-50'}`}><p className='text-center'>LowCode GPT can make mistakes and is not guaranteed to be 100% accurate.</p></div>
+      <div className={`fixed bottom-1 w-full text-xs text-gray-400 text-center mb-1 lg:hidden md:hidden transition-all ease-in-out duration-1000 ${!isOpen ? 'hidden' : 'z-50'}`}><p className='text-center'>NovaMind can make mistakes and is not guaranteed to be 100% accurate.</p></div>
     </div>
   );
 };

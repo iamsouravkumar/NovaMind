@@ -3,18 +3,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Code, Image, FileText, HelpCircle, Zap, Palette, Lightbulb, Cpu, Globe, Rocket, Music, Book } from 'lucide-react';
 
 const predefinedPrompts = [
-  { text: "Code", icon: Code, prompt: "Write a function to...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Image", icon: Image, prompt: "Create an image of...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Summarize", icon: FileText, prompt: "Summarize the following...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Help", icon: HelpCircle, prompt: "How do I...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Idea", icon: Lightbulb, prompt: "Give me an idea for...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Design", icon: Palette, prompt: "Design a logo for...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Explain", icon: Zap, prompt: "Explain the concept of...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Tech", icon: Cpu, prompt: "What's new in...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Travel", icon: Globe, prompt: "Plan a trip to...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Science", icon: Rocket, prompt: "Explain the theory of...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Music", icon: Music, prompt: "Compose a melody for...", image: "/placeholder.svg?height=40&width=40" },
-  { text: "Literature", icon: Book, prompt: "Analyze the theme of...", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Code", icon: Code, prompt: "Write a function to", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Image", icon: Image, prompt: "Create an image of", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Summarize", icon: FileText, prompt: "Summarize the following", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Help", icon: HelpCircle, prompt: "How do I", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Idea", icon: Lightbulb, prompt: "Give me an idea for", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Design", icon: Palette, prompt: "Design a logo for", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Explain", icon: Zap, prompt: "Explain the concept of", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Tech", icon: Cpu, prompt: "What's new in", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Travel", icon: Globe, prompt: "Plan a trip to", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Science", icon: Rocket, prompt: "Explain the theory of.", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Music", icon: Music, prompt: "Compose a melody for", image: "/placeholder.svg?height=40&width=40" },
+  { text: "Literature", icon: Book, prompt: "Analyze the theme of", image: "/placeholder.svg?height=40&width=40" },
 ];
 
 const containerVariants = {
