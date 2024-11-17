@@ -247,7 +247,7 @@ const Chat = ({ isSidebarOpen, user }) => {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 max-md:p-2">
+      <div className="flex-1 p-4 max-md:p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
         <AnimatePresence>
           {chatLoading ? (
             <div className="flex flex-col items-center justify-center h-full w-full">

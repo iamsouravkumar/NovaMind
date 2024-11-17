@@ -280,7 +280,7 @@ const Sidebar = ({ onToggle }) => {
 
             <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
               {loading ? (
-                <div className="space-y-4 p-4">
+                <div className="space-y-1 p-2">
                   <ChatSkeleton />
                   <ChatSkeleton />
                   <ChatSkeleton />
