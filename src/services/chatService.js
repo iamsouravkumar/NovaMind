@@ -28,7 +28,7 @@ export const chatService = {
   async generateResponse(message, model = "gemini-1.5-flash", chatHistory = []) {
     try {
       // Combine chat history with the new message
-      const context = chatHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n');
+      const context = chatHistory.map(msg => `${msg.content}`).join('\n');
       const fullMessage = `${context}\nUser: ${message}`; // Format the message for the AI
 
       const generativeModel = genAI.getGenerativeModel({ model });
@@ -38,6 +38,15 @@ export const chatService = {
     } catch (error) {
       console.error('Gemini API Error:', error);
       toast.error('Failed to generate response. Please try again.');
+
+      // Check for quota exhaustion error
+      if (error.message.includes('Resource has been exhausted')) {
+        // Display remaining quota or tokens
+        const remainingQuota = await this.checkRemainingQuota(); // Implement this method
+        toast.error(`Quota exhausted. Remaining tokens: ${remainingQuota}`);
+        throw new Error('Your message was blocked due to quota exhaustion. Please try again later.');
+      }
+
       if (error.message.includes('Candidate was blocked due to SAFETY')) {
         throw new Error('Your message was blocked due to safety concerns. Please try rephrasing it.');
       }

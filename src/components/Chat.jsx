@@ -19,7 +19,7 @@ const Chat = ({ isSidebarOpen, user }) => {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [msgLoading, setMsgLoading] = useState(false)
-  const [selectedModel, setSelectedModel] = useState('gemini-1.5-pro')
+  const [selectedModel, setSelectedModel] = useState('gemini-1.5-flash')
   const [chatLoading, setChatLoading] = useState(false)
   const [createChatLoading, setCreateChatLoading] = useState(false)
   const [firstMessageSent, setFirstMessageSent] = useState(false)
@@ -182,9 +182,24 @@ const Chat = ({ isSidebarOpen, user }) => {
     setInput(prompt)
   }
 
-  // const text = `Hey ${user ? user?.name : user?.email}, How can I help you today?`;
+  const animateText = (text) => {
+  if (!text) return null; // Return null if text is undefined or empty
+  return text.split('').map((char, index) => (
+    <motion.span
+      key={index}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.04, delay: index * 0.04 }} // Delay for character-wise animation
+    >
+      {char}
+    </motion.span>
+  ));
+};
+
+  const text = `Hey ${user ? user?.name : user?.email}, What can I help you with?`;
+
   const isChatPage = location.pathname === `/chat/${chatId}`;
-  // console.log(location.pathname, chatId, isChatPage)
 
   return (
     <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-200 ease-in-out ${isSidebarOpen ? 'lg:w-[80%] lg:ml-[20%] md:w-[75%] md:ml-[25%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
@@ -246,8 +261,8 @@ const Chat = ({ isSidebarOpen, user }) => {
               className="flex flex-col justify-center h-full text-center max-md:mx-auto"
             >
               <div className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-xl">
-                {user ? `Hey ${user?.name},` : user?.email}
-                <span className="block md:inline"> How can I help you today?</span>
+                {animateText(text)}
+                {/* <span className="block md:inline"> {animateText(text)}</span> */}
               </div>
 
               <div className="flex flex-wrap justify-center gap-4 mt-4">
@@ -295,6 +310,7 @@ const Chat = ({ isSidebarOpen, user }) => {
             <textarea
               ref={textareaRef}
               value={input}
+              required
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Message LowCode GPT..."

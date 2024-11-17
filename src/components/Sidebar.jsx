@@ -268,13 +268,13 @@ const Sidebar = ({ onToggle }) => {
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img src={starLogo} alt="LowCode GPT Logo" className="h-6 w-6" />
-                <h1 className="text-lg font-bold"><a href="https://iamsouravkumar.github.io/lowcodeGPT/" className="text-gray-100 hover:underline">LowCode GPT</a></h1>
+                <h1 className="text-lg font-bold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/lowcodeGPT/" className="text-gray-100 hover:underline">LowCode GPT</a></h1>
               </div>
               <button
                 onClick={toggleSidebar}
                 className="p-2 rounded-full hover:bg-gray-700 transition-colors duration-200"
               >
-                <BsLayoutSidebarInset className="w-6 h-6" />
+                <BsLayoutSidebarInset className={`w-6 h-6 ${!isOpen ? '' : 'rotate-180'}`} />
               </button>
             </div>
 
