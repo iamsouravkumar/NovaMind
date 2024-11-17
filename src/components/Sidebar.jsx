@@ -194,15 +194,13 @@ const Sidebar = ({ onToggle }) => {
             px-4
             py-2
             mb-2
-            text-gray-400
+            text-[#8A00FF]
             border-b
             border-gray-800/50
-            bg-gradient-to-r
-            from-gray-900/50
-            to-transparent
+            
           ">
             {groupTitle}
-            <span className="ml-2 text-gray-500 text-[10px]">({chats.length})</span>
+            {/* <span className="ml-2 text-gray-100 text-[10px]">({chats.length})</span> */}
           </h3>
         </div>
         <div className="space-y-1">

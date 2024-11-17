@@ -55,13 +55,13 @@ export default function PredefinedPrompts({ onPromptSelect }) {
               key={index}
               variants={itemVariants}
               onClick={() => onPromptSelect(prompt.prompt)}
-              className="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-black w-[calc(25%-0.5rem)] md:w-auto"
-              whileHover={{ scale: 1.05, backgroundColor: '#374151' }}
+              className="flex flex-col items-center justify-center p-2 bg-[#171717] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#8700FF] w-[calc(25%-0.5rem)] md:w-auto hover:ring-2 hover:ring-[#8700FF]"
+              whileHover={{ scale: 1.05, backgroundColor: '' }}
               whileTap={{ scale: 0.95 }}
             >
               <motion.div 
                 className="w-10 h-10 mb-1 relative"
-                whileHover={{ rotate: [0, -10, 10, -10, 0], transition: { duration: 0.5 } }}
+                whileHover={{ rotate: [0, -10, 10, -10, 0], transition: { duration: 0.3 } }}
               >
                 {/* <img
                   src={prompt.image}
@@ -70,7 +70,7 @@ export default function PredefinedPrompts({ onPromptSelect }) {
                 /> */}
                 <prompt.icon className="w-6 h-6 text-[#D700FF] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  "/>
               </motion.div>
-              <span className="text-xs text-gray-300 whitespace-nowrap">{prompt.text}</span>
+              <span className="text-xs text-gray-200 whitespace-nowrap">{prompt.text}</span>
             </motion.button>
           ))}
         </AnimatePresence>

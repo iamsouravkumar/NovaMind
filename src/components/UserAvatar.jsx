@@ -57,15 +57,15 @@ const UserAvatar = () => {
           <img
             src={user.photoURL}
             alt={user.displayName || 'User'}
-            className="w-8 h-8 rounded-full border-[1px] border-[#D700FF] object-cover"
+            className="w-8 h-8 rounded-full border-2 border-[#D700FF] animate-run object-cover"
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-white">
+          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#8700FF] to-[#D700FF] flex items-center justify-center text-white">
             {user?.email?.[0].toUpperCase() || 'U'}
           </div>
         )}
         <span className="text-white text-sm hidden md:block">
-          {user?.displayName || user?.email?.split('@')[0] || 'User'}
+          {/* {user?.displayName || user?.email?.split('@')[0] || 'User'} */}
         </span>
       </motion.button>
 

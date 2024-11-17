@@ -303,7 +303,7 @@ const Chat = ({ isSidebarOpen, user }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-border-run transition-all duration-300 ease-in-out max-md:w-[90%]" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}>
+      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-br from-[#8A00FF] to-[#D700FF] transition-all duration-300 ease-in-out max-md:w-[90%]" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}>
         <form onSubmit={handleSendMessage} className="relative flex bg-[#212121] transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '1rem' : '2rem', alignItems:input.length > 0 ? 'end' : 'center'}}>
           <div className="relative flex-grow">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}></div>
@@ -325,7 +325,7 @@ const Chat = ({ isSidebarOpen, user }) => {
           <button
             type="submit"
             disabled={loading || input.trim() === ''}
-            className="m-1 p-2 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white transition-all duration-300 hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed relative z-10 mr-2"
+            className="m-1 p-2 rounded-full bg-gradient-to-r from-[#D700FF] to-[#8A00FF] text-white transition-all duration-300 hover:from-purple-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-opacity-50 disabled:opacity-50 disabled:cursor-not-allowed relative z-10 mr-2"
           >
             {loading ? (
               <Loader2 className="w-6 h-6 animate-spin" />
