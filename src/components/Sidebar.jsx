@@ -268,7 +268,7 @@ const Sidebar = ({ onToggle }) => {
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img src={starLogo} alt="NovaMind Logo" className="h-6 w-6" />
-                <h1 className="text-lg font-bold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/lowcodeGPT/" className="text-gray-100 hover:underline letter-spacing-1">NovaMind</a></h1>
+                <h1 className="text-xl max-md:text-lg font-semibold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/NovaMind/" className="text-gray-100 hover:underline tracking-wider">NovaMind</a></h1>
               </div>
               <button
                 onClick={toggleSidebar}

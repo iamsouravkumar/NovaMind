@@ -57,7 +57,7 @@ const UserAvatar = () => {
           <img
             src={user.photoURL}
             alt={user.displayName || 'User'}
-            className="w-8 h-8 rounded-full border-2 border-purple-500"
+            className="w-8 h-8 rounded-full border-[1px] border-[#D700FF] object-cover"
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-indigo-500 flex items-center justify-center text-white">

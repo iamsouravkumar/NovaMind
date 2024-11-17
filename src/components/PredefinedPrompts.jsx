@@ -55,7 +55,7 @@ export default function PredefinedPrompts({ onPromptSelect }) {
               key={index}
               variants={itemVariants}
               onClick={() => onPromptSelect(prompt.prompt)}
-              className="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 w-[calc(25%-0.5rem)] md:w-auto"
+              className="flex flex-col items-center justify-center p-2 bg-gray-800 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-black w-[calc(25%-0.5rem)] md:w-auto"
               whileHover={{ scale: 1.05, backgroundColor: '#374151' }}
               whileTap={{ scale: 0.95 }}
             >
@@ -68,7 +68,7 @@ export default function PredefinedPrompts({ onPromptSelect }) {
                   alt={prompt.text}
                   className="w-full h-full object-cover rounded md:hidden"
                 /> */}
-                <prompt.icon className="w-6 h-6 text-blue-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  "/>
+                <prompt.icon className="w-6 h-6 text-[#D700FF] absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2  "/>
               </motion.div>
               <span className="text-xs text-gray-300 whitespace-nowrap">{prompt.text}</span>
             </motion.button>

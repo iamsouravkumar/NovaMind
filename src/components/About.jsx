@@ -38,7 +38,7 @@ export default function AboutUs() {
         <div className="min-h-screen bg-gradient-to-br from-[#212121] to-[#121212] text-white">
             <header className="container mx-auto px-4 py-12 md:py-16 text-center">
                 <motion.h1
-                    className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 "
+                    className="text-3xl md:text-4xl lg:text-6xl font-bold mb-4 md:mb-6 transition-colors ease-in-out duration-300 bg-gradient-to-r from-[#D700FF] to-[#8A00FF] bg-clip-text text-transparent"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.5 }}
@@ -65,16 +65,16 @@ export default function AboutUs() {
                         {features.map((feature, index) => (
                             <motion.div
                                 key={index}
-                                className="bg-gray-800 p-6 rounded-lg shadow-lg transform transition duration-300 hover:scale-105 border border-pink-500"
+                                className=" p-6 rounded-lg shadow-lg shadow-black transform transition duration-300 hover:scale-105 border border-[#8A00FF] hover:shadow-[#D700FF] hover:border-[#D700FF]"
                                 variants={fadeIn}
-                                whileHover={{ y: -5, boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)" }}
+                                whileHover={{ y: -5 }}
                             >
                                 <motion.div
                                     initial={{ scale: 1 }}
                                     whileHover={{ scale: 1.1 }}
                                     transition={{ type: "spring", stiffness: 300 }}
                                 >
-                                    <feature.icon className="w-12 h-12 mb-4 text-blue-400" />
+                                    <feature.icon className="w-12 h-12 mb-4 text-[#D700FF]" />
                                 </motion.div>
                                 <h3 className="text-xl font-semibold mb-2 text-gray-200">{feature.title}</h3>
                                 <p className="text-gray-400">{feature.description}</p>
@@ -89,10 +89,11 @@ export default function AboutUs() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6, delay: 0.2 }}
                 >
-                    <h2 className="text-2xl md:text-3xl font-semibold mb-6 md:mb-8 text-center ">Our Technology</h2>
+                    <h2 className="text-2xl md:text-3xl font-semibold mb-6 md:mb-8 text-center">Our Technology</h2>
                     <motion.div
-                        className="bg-gray-800  p-6 md:p-8 rounded-lg shadow-lg border border-pink-500"
-                        whileHover={{ boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)" }}
+                        className="p-6 md:p-8 rounded-lg shadow-lg shadow-black border border-[#8A00FF] hover:shadow-[#D700FF] hover:border-[#D700FF]"
+                        variants={fadeIn}
+                        whileHover={{ y: -5 }}
                     >
                         <p className="text-base md:text-lg mb-4 text-gray-300">
                             Our AI Assistant harnesses the power of advanced language models and machine learning algorithms to understand your needs and generate accurate, helpful responses across a wide range of topics and tasks.
@@ -115,7 +116,7 @@ export default function AboutUs() {
                     <h2 className="text-2xl md:text-3xl font-semibold mb-6 md:mb-8 text-gray-200">Ready to Enhance Your Productivity?</h2>
                     <motion.button
                         onClick={handleBtnClick}
-                        className="bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+                        className="bg-gradient-to-r from-[#D700FF] via-[#8A00FF] to-indigo-500 text-white font-bold py-3 px-8 rounded-full text-lg transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
                         whileHover={{ scale: 1.05, boxShadow: "0 5px 15px rgba(0, 0, 0, 0.3)" }}
                         whileTap={{ scale: 0.95 }}
                     >
@@ -125,7 +126,7 @@ export default function AboutUs() {
             </main>
 
             <footer className="bg-black py-6 md:py-4 text-center">
-                <p className="text-gray-200">&copy; 2024 NovaMind. All rights reserved.</p>
+                <p className="text-gray-200">&copy; 2024 <span className='bg-gradient-to-r from-[#D700FF] to-[#8A00FF] bg-clip-text text-transparent'>Novamind</span>. All rights reserved.</p>
             </footer>
         </div>
     );
