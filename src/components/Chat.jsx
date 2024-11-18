@@ -24,6 +24,9 @@ const Chat = ({ isSidebarOpen, user }) => {
   const [createChatLoading, setCreateChatLoading] = useState(false)
   const [firstMessageSent, setFirstMessageSent] = useState(false)
   const [showModal, setShowModal] = useState(false);
+  const [isExiting, setIsExiting] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [modalTimeout, setModalTimeout] = useState(null);
 
   const { chatId } = useParams()
   const navigate = useNavigate()
@@ -210,10 +213,39 @@ const Chat = ({ isSidebarOpen, user }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowModal(true);
+      startProgressBar(); // Start the progress bar when the modal is shown
     }, 1000); // 1 second delay
 
     return () => clearTimeout(timer); // Cleanup the timer
   }, []);
+
+  const startProgressBar = () => {
+    setElapsedTime(0); // Reset elapsed time
+    const interval = setInterval(() => {
+      setElapsedTime(prev => {
+        if (prev >= 10000) {
+          clearInterval(interval);
+          return 10000; // Ensure it doesn't exceed 10 seconds
+        }
+        return prev + 100; // Increment by 100ms
+      });
+    }, 100);
+
+    // Set a timeout to trigger exit animation after 10 seconds
+    const timeout = setTimeout(() => {
+      setIsExiting(true); // Start exit animation
+      setTimeout(() => {
+        setShowModal(false); // Close modal after animation
+      }, 500); // Match this duration with the exit animation duration
+    }, 10000); // Close after 10 seconds
+
+    setModalTimeout(timeout); // Store the timeout ID
+
+    return () => {
+      clearInterval(interval); // Cleanup the interval
+      clearTimeout(timeout); // Cleanup the timeout
+    };
+  };
 
   return (
     <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-100 ease-in-out ${isSidebarOpen ? 'lg:w-[80%] lg:ml-[20%] md:w-[75%] md:ml-[25%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
@@ -269,13 +301,25 @@ const Chat = ({ isSidebarOpen, user }) => {
           transition={{ duration: 0.5 }}
           className="fixed left-[9%] right-0 flex justify-center items-center w-full h-full z-50 max-md:left-0"
         >
-          <div className="bg-[#171717] p-5 fixed top-11 rounded-lg shadow-lg shadow-black w-[50%] flex justify-center items-center border-b border-[#D700FF] max-md:w-[95%] max-md:top-14 max-md:p-2">
+          <div className="bg-[#171717] p-5 fixed top-11 rounded-lg shadow-lg shadow-black w-[50%] flex justify-center items-center max-md:w-[95%] max-md:top-14 max-md:p-2">
             <p className="text-gray-100 text-sm font-light max-md:hidden">{importantText}</p>
             <p className="text-gray-100 text-sm font-light lg:hidden md:hidden">{importantTextForMobile}</p>
-            <button onClick={() => setShowModal(false)} className="text-red-500">
+            <button onClick={() => {
+              setIsExiting(true); // Start exit animation
+              clearTimeout(modalTimeout); // Clear the timeout if modal is closed manually
+              setTimeout(() => {
+                setShowModal(false); // Close modal after animation
+              }, 500); // Match this duration with the exit animation duration
+            }} className="text-red-500">
               <X className="w-7 h-7" />
             </button>
+          <div className="absolute bottom-0 left-0 w-full h-1 bg-gray-700 rounded-b-lg">
+            <div
+              className="h-full bg-[#D700FF] rounded-b-lg transition-all duration-300"
+              style={{ width: `${(elapsedTime / 10000) * 100}%` }} // Assuming 10 seconds for the timer
+            />
           </div>
+              </div>
         </motion.div>
       )}
 
