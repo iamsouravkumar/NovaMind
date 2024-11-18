@@ -19,8 +19,12 @@ export default function AuthPage() {
         try {
             setLoading(true);
             const result = await signInWithPopup(auth, provider);
-            toast.success(`Welcome, ${result.user.displayName}!`);
-            navigate('/');
+            if (result.user) {
+                toast.success(`Welcome, ${result.user.displayName}!`);
+                navigate('/');
+            } else {
+                throw new Error('Authentication failed. Please try again.');
+            }
         } catch (error) {
             console.error('Google login error:', error);
             toast.error('Failed to login with Google');

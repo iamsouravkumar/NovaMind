@@ -59,19 +59,22 @@ const Chat = ({ isSidebarOpen, user }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  useEffect(() => {
-    adjustTextareaHeight()
-  }, [input])
-
+  
   const adjustTextareaHeight = () => {
     const textarea = textareaRef.current
     if (textarea) {
       textarea.style.height = '35px'
       textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`
-      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      if (messages.length > 2) {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+      }
     }
   }
-
+  
+  useEffect(() => {
+    adjustTextareaHeight()
+  }, [input])
+  
   const handleSendMessage = async (e) => {
     e.preventDefault()
     if (!input.trim() || loading) return
