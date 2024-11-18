@@ -226,7 +226,7 @@ const Sidebar = ({ onToggle }) => {
 
                 // className="text-gray-400 hover:text-white transition-colors duration-200"
                 >
-                  <BsThreeDots className="w-4 h-4" onClick={(e) => { e.stopPropagation(); handleModalToggle(chat.id, index) }} />
+                  <BsThreeDots className="w-5 h-5" onClick={(e) => { e.stopPropagation(); handleModalToggle(chat.id, index) }} />
                 </button>
               </div>
             </motion.li>
@@ -270,9 +270,9 @@ const Sidebar = ({ onToggle }) => {
               </div>
               <button
                 onClick={toggleSidebar}
-                className="p-2 rounded-full hover:bg-gray-700 transition-colors duration-200"
+                className="p-2 rounded-full hover:bg-gray-700 max-md:hover:bg-[#171717] transition-colors duration-200"
               >
-                <BsLayoutSidebarInset className={`w-6 h-6 ${!isOpen ? '' : 'rotate-180'}`} />
+                <BsLayoutSidebarInset className={`w-6 h-6 ${!isOpen ? '' : 'rotate-180'} max-md:w-5 max-md:h-5`} />
               </button>
             </div>
 
