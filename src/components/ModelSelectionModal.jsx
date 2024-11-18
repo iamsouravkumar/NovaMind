@@ -13,7 +13,7 @@ const ModelSelectionModal = ({ selectedModel, onSelectModel }) => {
     return (
         <div className="relative">
             <motion.button
-                className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-800 transition-colors duration-200"
+                className="flex items-center space-x-2 p-2 rounded-full hover:bg-[#171717] transition-colors duration-200"
                 onClick={() => setShowDropdown(!showDropdown)}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -28,7 +28,7 @@ const ModelSelectionModal = ({ selectedModel, onSelectModel }) => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -10 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute mt-2 w-48 bg-gray-800 rounded-lg shadow-lg py-1 z-50"
+                        className="absolute mt-2 w-48 bg-[#171717] rounded-lg shadow-md shadow-black py-1 z-50"
                     >
                         <ul>
                             {models.map(model => (
@@ -38,7 +38,7 @@ const ModelSelectionModal = ({ selectedModel, onSelectModel }) => {
                                             onSelectModel(model.id);
                                             setShowDropdown(false); // Close dropdown after selection
                                         }}
-                                        className="w-full text-left text-gray-100 p-2 rounded-full hover:bg-gray-700 transition-colors duration-200 text-sm"
+                                        className="w-full text-left text-gray-100 p-2 rounded-full hover:bg-[#8A00FF] transition-colors duration-200 text-sm"
                                     >
                                         {model.name}
                                     </button>

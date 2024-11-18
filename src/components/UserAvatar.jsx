@@ -48,7 +48,7 @@ const UserAvatar = () => {
   return (
     <div className="relative">
       <motion.button
-        className="flex items-center space-x-2 p-2 rounded-full hover:bg-gray-800 transition-colors duration-200"
+        className="flex items-center ml-2 p-2 rounded-full transition-colors duration-200"
         onClick={() => setShowDropdown(!showDropdown)}
         whileHover={{ scale: 1.05 }}
         whileTap={{ scale: 0.95 }}
@@ -57,7 +57,7 @@ const UserAvatar = () => {
           <img
             src={user.photoURL}
             alt={user.displayName || 'User'}
-            className="w-8 h-8 rounded-full border-2 border-[#D700FF] animate-run object-cover"
+            className="w-8 h-8 rounded-full border-2 border-[#D700FF] hover:border-[#8700FF] object-cover"
           />
         ) : (
           <div className="w-8 h-8 rounded-full bg-gradient-to-r from-[#8700FF] to-[#D700FF] flex items-center justify-center text-white">
@@ -76,7 +76,7 @@ const UserAvatar = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute right-0 mt-2 w-48 bg-gray-800 rounded-lg shadow-lg py-1 z-50 max-md:z-0"
+            className="absolute right-0 mt-2 w-48 bg-[#171717] rounded-lg shadow-md py-1 z-50 max-md:z-0 shadow-black"
           >
             <div className="px-4 py-2 border-b border-gray-700">
               <p className="text-sm text-white font-medium truncate">
@@ -87,7 +87,7 @@ const UserAvatar = () => {
             
             <button
               onClick={() => {/* Add profile settings handler */}}
-              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-700 flex items-center space-x-2"
+              className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:bg-gray-500 flex items-center space-x-2"
             >
               <Settings className="w-4 h-4" />
               <span>Settings</span>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Loader2, Send } from 'lucide-react'
+import { Loader2, Send, X } from 'lucide-react'
 import { chatService } from '../services/chatService'
 import { toast } from 'react-hot-toast'
 import { useMediaQuery } from 'react-responsive'
@@ -23,6 +23,7 @@ const Chat = ({ isSidebarOpen, user }) => {
   const [chatLoading, setChatLoading] = useState(false)
   const [createChatLoading, setCreateChatLoading] = useState(false)
   const [firstMessageSent, setFirstMessageSent] = useState(false)
+  const [showModal, setShowModal] = useState(false);
 
   const { chatId } = useParams()
   const navigate = useNavigate()
@@ -147,16 +148,16 @@ const Chat = ({ isSidebarOpen, user }) => {
   }
 
   const formatMessageContent = (content) => {
-  // Regular expressions for bold text and code
-  const boldTextRegex = /\*\*(.*?)\*\*/g;
-  const inlineCodeRegex = /`([^`]+)`/g;
-  const blockCodeRegex = /```([\s\S]*?)```/g;
+    // Regular expressions for bold text and code
+    const boldTextRegex = /\*\*(.*?)\*\*/g;
+    const inlineCodeRegex = /`([^`]+)`/g;
+    const blockCodeRegex = /```([\s\S]*?)```/g;
 
-  // Replace bold text
-  content = content.replace(boldTextRegex, '<strong>$1</strong>');
+    // Replace bold text
+    content = content.replace(boldTextRegex, '<strong>$1</strong>');
 
-  // Replace block code with proper formatting
-  content = content.replace(blockCodeRegex, (match, code) => `
+    // Replace block code with proper formatting
+    content = content.replace(blockCodeRegex, (match, code) => `
     <div class="relative">
       <pre class="bg-gray-800 text-gray-200 p-3 rounded"><code>${code}</code></pre>
       <button class="copy-button absolute top-1 right-1 p-1 text-sm bg-gray-700 text-white rounded"
@@ -164,11 +165,11 @@ const Chat = ({ isSidebarOpen, user }) => {
     </div>
   `);
 
-  // Replace inline code with proper formatting
-  content = content.replace(inlineCodeRegex, '<code class="bg-gray-200 p-1 rounded">$1</code>');
+    // Replace inline code with proper formatting
+    content = content.replace(inlineCodeRegex, '<code class="bg-gray-200 p-1 rounded">$1</code>');
 
-  return content;
-};
+    return content;
+  };
 
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
@@ -183,23 +184,36 @@ const Chat = ({ isSidebarOpen, user }) => {
   }
 
   const animateText = (text) => {
-  if (!text) return null; // Return null if text is undefined or empty
-  return text.split('').map((char, index) => (
-    <motion.span
-      key={index}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.04, delay: index * 0.04 }} // Delay for character-wise animation
-    >
-      {char}
-    </motion.span>
-  ));
-};
+    if (!text) return null; // Return null if text is undefined or empty
+    return text.split('').map((char, index) => (
+      <motion.span
+        key={index}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.04, delay: index * 0.04 }} // Delay for character-wise animation
+      >
+        {char}
+      </motion.span>
+    ));
+  }
 
   const text = `Hey ${user ? user?.name : user?.email}, What can I help you with?`;
 
+  let importantText = "Important: All the models are currently facing heavy load and may take longer to respond. We are working on optimizing the models to provide faster responses. Thank you for your patience.";
+
+  let importantTextForMobile = 'If you are facing any issue while sending messages so change the model and try again.'
+
   const isChatPage = location.pathname === `/chat/${chatId}`;
+
+  // Show the important info modal after 1 second
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowModal(true);
+    }, 1000); // 1 second delay
+
+    return () => clearTimeout(timer); // Cleanup the timer
+  }, []);
 
   return (
     <div className={`fixed top-0 flex flex-col h-[100%] transition-all duration-100 ease-in-out ${isSidebarOpen ? 'lg:w-[80%] lg:ml-[20%] md:w-[75%] md:ml-[25%]' : 'w-full ml-0'} dark:bg-gray-900 max-md:w-[100%] max-md:ml-0`}>
@@ -210,7 +224,7 @@ const Chat = ({ isSidebarOpen, user }) => {
       )}
       <div className={`flex ${isChatPage ? 'justify-end' : 'justify-between flex-row-reverse max-md:ml-28'} items-center p-1`}>
         {isChatPage ? (
-          <button 
+          <button
             className="text-gray-400 hover:text-white transition-colors duration-200 p-1 lg:hidden"
             onClick={handleNewChat}
           >
@@ -247,6 +261,24 @@ const Chat = ({ isSidebarOpen, user }) => {
         )}
       </div>
 
+      {showModal && (
+        <motion.div
+          initial={{ y: -100, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -100, opacity: 0 }}
+          transition={{ duration: 0.5 }}
+          className="fixed left-[9%] right-0 flex justify-center items-center w-full h-full z-50 max-md:left-0"
+        >
+          <div className="bg-[#171717] p-5 fixed top-11 rounded-lg shadow-lg shadow-black w-[50%] flex justify-center items-center border-b border-[#D700FF] max-md:w-[95%] max-md:top-14 max-md:p-2">
+            <p className="text-gray-100 text-sm font-light max-md:hidden">{importantText}</p>
+            <p className="text-gray-100 text-sm font-light lg:hidden md:hidden">{importantTextForMobile}</p>
+            <button onClick={() => setShowModal(false)} className="text-red-500">
+              <X className="w-7 h-7" />
+            </button>
+          </div>
+        </motion.div>
+      )}
+
       <div className="flex-1 p-4 max-md:p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-transparent">
         <AnimatePresence>
           {chatLoading ? (
@@ -260,12 +292,12 @@ const Chat = ({ isSidebarOpen, user }) => {
               exit={{ opacity: 0, y: -20 }}
               className="flex flex-col justify-center h-full text-center max-md:mx-auto"
             >
-              <div className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-xl">
+              <div className="text-2xl font-bold text-gray-100 dark:text-gray-300 mx-1 max-md:text-xl max-md:mt-3">
                 {animateText(text)}
                 {/* <span className="block md:inline"> {animateText(text)}</span> */}
               </div>
 
-              <div className="flex flex-wrap justify-center gap-4 mt-4">
+              <div className="flex flex-wrap justify-center gap-4 mt-4 max-md:mt-3">
                 <PredefinedPrompts onPromptSelect={handlePredefinedPrompt} />
               </div>
             </motion.div>
@@ -303,10 +335,10 @@ const Chat = ({ isSidebarOpen, user }) => {
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-br from-[#8A00FF] to-[#D700FF] transition-all duration-300 ease-in-out max-md:w-[90%]" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}>
-        <form onSubmit={handleSendMessage} className="relative flex bg-[#212121] transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '1rem' : '2rem', alignItems:input.length > 0 ? 'end' : 'center'}}>
+      <div className="relative w-full max-w-4xl mx-auto mb-2 p-[3px] bg-gradient-to-br from-[#8A00FF] to-[#D700FF] transition-all duration-300 ease-in-out max-md:w-[90%]" style={{ borderRadius: input.length > 0 ? '1rem' : '2rem' }}>
+        <form onSubmit={handleSendMessage} className="relative flex bg-[#212121] transition-all duration-300 ease-in-out" style={{ borderRadius: input.length > 0 ? '1rem' : '2rem', alignItems: input.length > 0 ? 'end' : 'center' }}>
           <div className="relative flex-grow">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift transition-all duration-300 ease-in-out" style={{borderRadius: input.length > 0 ? '1rem' : '2rem'}}></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-400/10 via-pink-500/10 to-indigo-400/10 animate-gradient-shift transition-all duration-300 ease-in-out" style={{ borderRadius: input.length > 0 ? '1rem' : '2rem' }}></div>
             <textarea
               ref={textareaRef}
               value={input}

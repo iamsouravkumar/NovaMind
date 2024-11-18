@@ -210,10 +210,10 @@ const Sidebar = ({ onToggle }) => {
               ref={(el) => chatRefs.current[index] = el}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.3 }}
+              transition={{ duration: 0.1 }}
               onClick={() => handleChatSelect(chat)}
-              className={`cursor-pointer p-3 mx-2 rounded-lg transition-all duration-200 ease-in-out border-[1px] border-slate-500/30 text-ellipsis line-clamp-1
-                ${chat.id === selectedChatId ? 'bg-gray-800 shadow-lg shadow-gray-900/20' : 'hover:bg-gray-800/70'}
+              className={`cursor-pointer p-3 mx-2 rounded-lg transition-all duration-200 ease-in-out border border-slate-500/30 text-ellipsis line-clamp-1
+                ${chat.id === selectedChatId ? 'bg-gray-800 shadow-lg shadow-gray-900/20 border-[#8700FF]' : 'hover:bg-gray-800/70'}
               `}
             >
               <div className="flex items-center space-x-3">
@@ -266,7 +266,7 @@ const Sidebar = ({ onToggle }) => {
             <div className="px-3 py-2 border-b border-gray-700 flex justify-between items-center">
               <div className="flex items-center space-x-2">
                 <img src={starLogo} alt="NovaMind Logo" className="h-6 w-6" />
-                <h1 className="text-xl max-md:text-lg font-semibold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/NovaMind/" className="text-gray-100 hover:underline tracking-wider">NovaMind</a></h1>
+                <h1 className="text-xl max-md:text-lg font-semibold transition-all duration-200 ease-in-out"><a href="https://iamsouravkumar.github.io/NovaMind/" className="text-gray-100 tracking-wider">NovaMind</a></h1>
               </div>
               <button
                 onClick={toggleSidebar}
@@ -317,7 +317,7 @@ const Sidebar = ({ onToggle }) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed bg-gray-800 text-gray-100 p-3 rounded-lg shadow-lg z-[60] w-48 md:w-64 max-md:mt-1"
+            className="fixed bg-[#171717] shadow-md shadow-black text-gray-100 p-3 rounded-lg z-[60] w-48 md:w-64 max-md:mt-1"
             style={{
               top: modalPosition.top,
               left: modalPosition.left,
@@ -326,7 +326,7 @@ const Sidebar = ({ onToggle }) => {
           >
             <div className="space-y-2">
               <button
-                className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg"
+                className="w-full text-left text-sm p-2 hover:bg-[gray-700] rounded-lg"
                 onClick={() => handleEditTitleClick(selectedChatId, chats.find(chat => chat.id === selectedChatId)?.title || '')}
               >
                 <p className="flex items-center gap-2"><BsPencil size={15} className='text-blue-500' /> Change Title </p>
@@ -347,17 +347,17 @@ const Sidebar = ({ onToggle }) => {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[70]"
           >
-            <div className="bg-gray-800 p-6 rounded-lg w-80">
-              <h2 className="text-xl font-bold mb-4 text-white">Edit Chat Title</h2>
+            <div className="bg-[#171717] p-6 rounded-lg w-80">
+              <h2 className="text-xl font-bold mb-4 text-white text-center">Edit Chat Title</h2>
               <form onSubmit={handleTitleSubmit}>
                 <input
                   type="text"
                   value={newTitle}
                   onChange={(e) => setNewTitle(e.target.value)}
-                  className="w-full p-2 mb-4 bg-gray-700 text-white rounded"
+                  className="w-full p-2 mb-4 border-b bg-[#171717] border-[#D700FF] shadow-sm shadow-black text-white rounded"
                   placeholder="Enter new title"
                 />
-                <div className="flex justify-end space-x-2">
+                <div className="flex justify-between space-x-2">
                   <button
                     type="button"
                     onClick={() => setEditTitleModalOpen(false)}
