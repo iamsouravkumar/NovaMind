@@ -326,7 +326,7 @@ const Sidebar = ({ onToggle }) => {
           >
             <div className="space-y-2">
               <button
-                className="w-full text-left text-sm p-2 hover:bg-[gray-700] rounded-lg"
+                className="w-full text-left text-sm p-2 hover:bg-gray-700 rounded-lg"
                 onClick={() => handleEditTitleClick(selectedChatId, chats.find(chat => chat.id === selectedChatId)?.title || '')}
               >
                 <p className="flex items-center gap-2"><BsPencil size={15} className='text-blue-500' /> Change Title </p>
